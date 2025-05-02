@@ -8,12 +8,16 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "contributors": ["https://github.com/abhub23"],
+  "description": "The Client is a fan of Sockets in diff languages so does it have many backends written for it.",
   "dependencies": {
     "@tailwindcss/postcss": "^4.0.16",
+    "motion": "^12.9.4",
     "next": "15.2.3",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.0.16"
   },
   "devDependencies": {
