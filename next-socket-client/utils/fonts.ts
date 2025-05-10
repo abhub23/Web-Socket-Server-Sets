@@ -1,8 +1,7 @@
-import { Bricolage_Grotesque } from "next/font/google";
-
+import { Bricolage_Grotesque } from 'next/font/google';
 
 const Bricolage_font = Bricolage_Grotesque({
-    subsets: ['latin'],
-})
+  subsets: ['latin'],
+});
 
-export const Bricolage = Bricolage_font.className
+export const Bricolage = Bricolage_font.className;
