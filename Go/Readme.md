@@ -1,10 +1,11 @@
-# Web Socket using Gorilla
+# Web Socket using Socket.IO
 
 - Go doesn't have std lib for Web sockets, it do have *http/net* but for http connections only
 - For Web Sockets we are going to use Socket.IO package imported from github
 - There is also a package called gorilla but for that to interact we need Native WSS
 
-**Let me explain Clearly**
+***Let me explain Clearly***
+
 - If you're using Socket.IO in Backend use Socket.IO in Frontend because it has a custom protocol, built-in reconnection, rooms, and events that won't work with native WebSockets.
 
 - If you're using Native WS like Gorilla Provides in Go use Native WS in Frontend because it's lighter, faster, and directly compatible with the standard WebSocket API in browsers.
@@ -22,3 +23,12 @@ Gorilla WebSocket follows the WebSocket standard (RFC 6455) – it communicates 
 A native WebSocket client (React's WebSocket API or react-use-websocket) will work perfectly with Gorilla.
 A Socket.IO client expects a different handshake and message structure, so it won’t connect properly.
 
+# New Things Learned
+
+- If a Package name is long we can use **import alias** like
+
+```bash
+import soc "github.com/googollee/go-socket.io"
+
+```
+- Now i can use soc in place of package name all over my code and *Now using package name will give error*
