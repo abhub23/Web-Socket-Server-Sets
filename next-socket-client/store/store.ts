@@ -29,3 +29,15 @@ export const useGenerate = create<Generatetype>((set) => ({
     generate: false,
     setGenerate: (state: boolean) => set({generate: state})
 }))
+
+type Messagetype = {
+    message: Array<{senderId: string, message: string}>;
+    addMessage: (senderId: string, message: string) => void
+}
+
+export const useMessage = create<Messagetype>((set, get) => ({
+    message: [],
+    addMessage: (senderId: string, message: string) => set((state) => ({
+        message: [...state.message, {senderId, message}]
+    }))
+}))
