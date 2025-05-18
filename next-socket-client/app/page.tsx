@@ -1,23 +1,23 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import { Bricolage } from '@/utils/fonts';
 import { useTheme } from 'next-themes';
 import { MoonIcon, SunIcon, CopyIcon } from '@radix-ui/react-icons';
 import { toast, Toaster } from 'sonner';
 import { createRoomID } from '@/utils/createRoomID';
 import { SafeRender } from '@/utils/Saferender';
+import { useGenerate, useRoomId, useUsername } from '@/store/store';
+import { useRouter } from 'next/navigation';
 
-const Socket_URL = 'http://localhost:6006';
-
-const socket = io(Socket_URL);
+const socket = io(process.env.NEXT_PUBLIC_BACKEND_SOCKET_URL);
 
 export default function Home() {
-    const [roomId, setRoomId] = useState<string>('');
-    const [username, setUsername] = useState<string>('');
-    const [generate, setGenerate] = useState(false)
-    const { theme, setTheme } = useTheme();
+  const { roomId, setRoomId } = useRoomId();
+  const { username, setUsername } = useUsername();
+  const { generate, setGenerate } = useGenerate()
+  const { theme, setTheme } = useTheme();
+
+  const router = useRouter()
 
   const toggleTheme = () => {
     setTheme(theme == 'light' ? 'dark' : 'light');
@@ -29,19 +29,26 @@ export default function Home() {
   const createId = () => {
     setRoomId(createRoomID());
     toast.success('Room Id Created');
-   setGenerate(true)
+    setGenerate(true)
   };
 
   const handleRoomJoin = (e: React.ChangeEvent<any>) => {
     if (!roomId || (!validateRoomId(roomId))) {
       toast.error('Enter a valid room Id');
-    }else if(username == ''){
+      return
+    } else if (username == '') {
       toast.error('Enter username')
+      return
     }
-    else{
-      toast.success(`${username} Joined the room`)
+    else {
+      console.log(username, roomId)
+      socket.emit('private-chat', ({
+        roomId: roomId
+      }))
+      router.push(`/chat-room?username=${username}&roomId=${roomId}`)
+
     }
-    
+
   };
 
   const handleRoomId = () => {
@@ -52,7 +59,7 @@ export default function Home() {
   return (
     <>
       <div
-        className={`lg:h-[60px] flex lg:px-[40px] lg:pt-[30px] px-[30px] pt-[30px] justify-end ${Bricolage}`}
+        className={`lg:h-[60px] flex lg:px-[40px] lg:pt-[30px] px-[30px] pt-[30px] justify-end`}
       >
         <span className="h-[20px] cursor-pointer" onClick={toggleTheme}>
           <SafeRender>
@@ -65,11 +72,12 @@ export default function Home() {
         </span>
       </div>
       <div
-        className={`lg:mt-[80px] mt-[140px] flex flex-col lg:w-[1000px] lg:h-[400px] mx-auto ${Bricolage}`}
+        className={`lg:mt-[70px] mt-[140px] flex flex-col lg:w-[1000px] lg:h-[400px] mx-auto `}
       >
-        <span className="pt-[20px] lg:text-[68px] text-[30px] mx-auto font-bold">
+        <h1 className="pt-[20px] text-[30px] lg:text-[78px] mx-auto font-bold bg-gradient-to-r from-fuchsia-400 via-pink-400 to-red-400 bg-clip-text text-transparent">
           Welcome to Chathub
-        </span>
+        </h1>
+
         <Toaster />
         <div className="flex flex-col gap-[4px] mx-auto">
           <div className="lg:p-4 p-2 flex flex-col mx-auto">
@@ -90,14 +98,14 @@ export default function Home() {
               onChange={(e: any) => setUsername(e.target.value)}
             />
             <button
-              className="lg:h-[36px] h-[32px] lg:w-[560px] w-[300px] lg:rounded-[6px] rounded-[4px] lg:text-[16px] text-[14px] lg:mt-[16px] mt-[10px] lg:text[14px] text-white dark:text-black bg-black dark:bg-white hover:bg-black/80 transition-all duration-300 hover:dark:bg-white/90 cursor-pointer"
+              className="lg:h-[36px] h-[32px] lg:w-[560px] w-[300px] lg:rounded-[6px] rounded-[4px] lg:text-[16px] text-[14px] lg:mt-[16px] mt-[10px] lg:text[14px] text-white dark:text-black bg-black dark:bg-white hover:bg-black/85 transition-all duration-300 hover:dark:bg-white/90 cursor-pointer"
               onClick={handleRoomJoin}
             >
               Join Room
             </button>
 
-      
-           
+
+
           </div>
           <span className="p-2 lg:text-[16px] text-[14px] lg:w-[700px] text-center w-[220px] mx-auto">
             Don't have any Room to join? Create your own Private Room
@@ -111,7 +119,7 @@ export default function Home() {
           {generate == true && (
             <div className="lg:p-2 mx-auto">
               <div className="flex items-center lg:text-[16px] text-[14px] gap-2">
-                Share this Room Id with your friend:
+                Share this Room Id with your friends to chat privately:
                 <span className="lg:text-[18px] text-[16px] font-semibold">
                   {roomId}
                 </span>
