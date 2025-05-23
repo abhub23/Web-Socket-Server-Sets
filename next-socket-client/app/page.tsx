@@ -1,43 +1,44 @@
 'use client';
 
-import { io } from 'socket.io-client';
-import { useTheme } from 'next-themes';
-import { MoonIcon, SunIcon, CopyIcon } from '@radix-ui/react-icons';
+import { useEffect } from 'react';
+import { CopyIcon } from '@radix-ui/react-icons';
 import { toast, Toaster } from 'sonner';
-import { createRoomID } from '@/utils/createRoomID';
-import { SafeRender } from '@/utils/Saferender';
 import { useGenerate, useRoomId, useUsername } from '@/store/store';
 import { useRouter } from 'next/navigation';
 import socket from '@/utils/socket';
 import Footer from '@/components/Footer';
+import { ToggleTheme } from '@/components/ToggleTheme';
 
 export default function Home() {
   const { roomId, setRoomId } = useRoomId();
   const { username, setUsername } = useUsername();
   const { generate, setGenerate } = useGenerate();
-  const { theme, setTheme } = useTheme();
 
   const router = useRouter();
 
-  const toggleTheme = () => {
-    setTheme(theme == 'light' ? 'dark' : 'light');
-  };
+  useEffect(() => {
+    socket.on('room-created', (roomId) => {
+      setRoomId(roomId)
+      console.log(roomId)
+      toast.success(`Room Id Created ${roomId}`);
+    })
 
-  const validateRoomId = (Id: string) => {
-    return /^\d{4}$/.test(Id);
-  };
+    return () => {
+      socket.off('room-created')
+    }
+  }, [roomId])
 
   const createId = () => {
-    setRoomId(createRoomID());
-    toast.success('Room Id Created');
+    socket.connect()
+    socket.emit('create-room')
     setGenerate(true);
   };
 
   const handleRoomJoin = (e: React.ChangeEvent<any>) => {
-    if (!roomId || !validateRoomId(roomId)) {
+    if (!roomId) {
       toast.error('Enter a valid room Id');
       return;
-    } else if (username == '') {
+    } else if (username.trim() == '') {
       toast.error('Enter username');
       return;
     } else {
@@ -45,7 +46,7 @@ export default function Home() {
         socket.connect();
       }
       console.log(username, roomId);
-      socket.emit('private-chat', roomId, username );
+      socket.emit('private-chat', roomId, username);
       router.push(`/chat-room?username=${username}&roomId=${roomId}`);
     }
   };
@@ -57,19 +58,9 @@ export default function Home() {
 
   return (
     <>
-      <div
-        className={`lg:h-[50px] flex lg:px-[40px] lg:pt-[30px] px-[30px] pt-[30px] justify-end`}
-      >
-        <span className="h-[20px] cursor-pointer" onClick={toggleTheme}>
-          <SafeRender>
-            {theme == 'light' ? (
-              <MoonIcon className="h-[20px] w-[20px]" />
-            ) : (
-              <SunIcon className="h-[20px] w-[20px]" />
-            )}
-          </SafeRender>
-        </span>
-      </div>
+      <div className={`lg:h-[50px] flex lg:px-[40px] lg:pt-[30px] px-[30px] pt-[30px] justify-end`}>
+        <ToggleTheme />
+      </div >
       <div
         className={`lg:mt-[60px] mt-[110px] flex flex-col lg:w-[1000px] lg:h-[400px] h-[330px] mx-auto `}
       >
@@ -81,15 +72,15 @@ export default function Home() {
         <div className="flex flex-col gap-[4px] mx-auto">
           <div className="lg:p-4 p-2 flex flex-col mx-auto">
             <input
-              className="lg:h-[40px] h-[40px] lg:w-[560px] w-[320px] lg:rounded-[4px] p-2 rounded-[4px] lg:text-[16px] text-[15px] lg:border-2 border-1 outline-none border-black/50 dark:border-white/50 mx-auto "
+              className="lg:h-[40px] h-[40px] lg:w-[560px] w-[320px] lg:rounded-[4px] p-2 rounded-[4px] lg:text-[16px] text-[15px] lg:border-1 border-1 outline-none border-black/50 dark:border-white/50 mx-auto "
               type="text"
               placeholder="Enter Room Id"
-              maxLength={4}
+              maxLength={6}
               value={roomId}
-              onChange={(e: any) => setRoomId(e.target.value)}
+              onChange={(e: any) => setRoomId(e.target.value) }
             />
             <input
-              className="lg:h-[40px] h-[40px] lg:w-[560px] w-[320px] lg:mt-[10px] mt-[8px] lg:rounded-[4px] p-2 rounded-[4px] lg:text-[16px] text-[15px] lg:border-2 border-1 outline-none border-black/50 dark:border-white/50 mx-auto "
+              className="lg:h-[40px] h-[40px] lg:w-[560px] w-[320px] lg:mt-[10px] mt-[8px] lg:rounded-[4px] p-2 rounded-[4px] lg:text-[16px] text-[15px] lg:border-1 border-1 outline-none border-black/50 dark:border-white/50 mx-auto "
               type="text"
               placeholder="Username"
               maxLength={20}
@@ -120,7 +111,7 @@ export default function Home() {
                   {roomId}
                 </span>
                 <CopyIcon
-                  className="h-[34px] w-[20px] cursor-pointer"
+                  className="h-[40px] w-[22px] text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white transition-colors duration-300 cursor-pointer"
                   onClick={handleCopy}
                 />
               </div>
@@ -128,7 +119,7 @@ export default function Home() {
           )}
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </>
   );
 }
