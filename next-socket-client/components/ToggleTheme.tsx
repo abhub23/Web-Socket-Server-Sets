@@ -11,7 +11,7 @@ export const ToggleTheme: React.FC = () => {
 
   return (
     <button
-      className="h-[36px] lg:w-[36px] flex items-center justify-center border-gray-300 dark:border-white/20 rounded-[6px] hover:bg-zinc-100 dark:hover:bg-zinc-800/50 border-1 cursor-pointer"
+      className="lg:h-[36px] h-[36px] lg:w-[36px] w-[36px] flex items-center dark:text-white justify-center  rounded-[12px] hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
       onClick={toggleTheme}
     >
       <SafeRender>
