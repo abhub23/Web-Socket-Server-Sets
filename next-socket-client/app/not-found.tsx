@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Bricolage } from '@/utils/fonts';
 import { motion } from 'motion/react';
 
 const ErrorPage = () => {
@@ -12,7 +11,7 @@ const ErrorPage = () => {
 
   return (
     <div
-      className={`${Bricolage} bg-white dark:bg-black font-semibold flex flex-col justify-center items-center h-screen`}
+      className='bg-white dark:bg-black font-semibold flex flex-col justify-center items-center h-screen'
     >
       <motion.div
         initial={{ opacity: 0, y: 100 }}

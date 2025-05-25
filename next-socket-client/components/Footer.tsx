@@ -1,10 +1,9 @@
 import Link from 'next/link';
-import { Bricolage } from '@/utils/fonts';
 
 const Footer = () => {
   return (
     <div
-      className={`h-10 bg-transparent lg:mt-[136px] mt-[150px] lg:text-[16px] text-[12px] flex justify-center items-center mb-2 dark:text-white ${Bricolage}`}
+      className='h-10 bg-transparent lg:mt-[136px] mt-[150px] lg:text-[16px] text-[12px] flex justify-center items-center mb-2 dark:text-white'
     >
       Designed and Developed by
       <Link
