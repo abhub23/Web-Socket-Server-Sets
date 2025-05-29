@@ -65,9 +65,10 @@ export default function Home() {
     <motion.div
       initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      transition={{ type: 'spring', stiffness: 50, damping: 20 }}>
+      transition={{ type: 'spring', stiffness: 50, damping: 20 }}
+      className='overflow-hidden'>
       <div
-        className={`flex justify-end px-[14px] pt-[20px] lg:h-[50px] lg:px-[40px] lg:pt-[30px]`}
+        className={`flex justify-end px-[14px] pt-[20px] lg:h-[50px] lg:px-[30px] lg:pt-[30px]`}
       >
         <ToggleTheme />
       </div>
@@ -87,7 +88,7 @@ export default function Home() {
               placeholder="Enter Room Id"
               maxLength={6}
               value={roomId}
-              onChange={(e: any) => setRoomId(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRoomId(e.target.value)}
             />
             <input
               className="mx-auto mt-[8px] h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[15px] outline-none lg:mt-[10px] lg:h-[40px] lg:w-[560px] lg:rounded-[4px] lg:border-1 lg:text-[16px] dark:border-white/50"
@@ -95,7 +96,7 @@ export default function Home() {
               placeholder="Username"
               maxLength={20}
               value={username}
-              onChange={(e: any) => setUsername(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
             />
             <button
               className="lg:text[14px] mt-[10px] h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-black text-[15px] font-medium text-white transition-all duration-300 hover:bg-black/85 lg:mt-[16px] lg:h-[38px] lg:w-[560px] lg:rounded-[6px] lg:text-[16px] dark:bg-white dark:text-black hover:dark:bg-white/90"
@@ -106,7 +107,7 @@ export default function Home() {
             </button>
           </div>
           <span className="mx-auto w-[240px] p-2 text-center text-[15px] lg:w-[700px] lg:text-[16px]">
-            Don't have any Room to join? Create your own Private Room
+            Don&apos;t have any Room to join? Create your own Private Room
           </span>
           <button
             className="mx-auto h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-blue-400 text-[15px] font-medium text-white transition-all duration-300 hover:bg-blue-400/90 lg:mt-[1px] lg:h-[38px] lg:w-[560px] lg:rounded-[6px] lg:text-[16px]"

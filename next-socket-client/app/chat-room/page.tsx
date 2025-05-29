@@ -2,7 +2,7 @@
 
 import { useMessage } from '@/store/store';
 import { useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { toast, Toaster } from 'sonner';
 import socket from '@/utils/socket';
 import type { Msgtype } from '@/store/store';
@@ -12,7 +12,7 @@ import { ToggleTheme } from '@/components/ToggleTheme';
 import { useScrollBottom } from '@/store/useScrollBottom';
 import { useEnter } from '@/store/useEnter';
 
-const Chatroom: React.FC = () => {
+const ChatroomContent: React.FC = () => {
   const searchParams = useSearchParams();
   const username = searchParams.get('username') ?? '';
   const roomId = searchParams.get('roomId') ?? '';
@@ -38,6 +38,7 @@ const Chatroom: React.FC = () => {
     addMessage({ senderId, message, time });
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     socket.on('receive-message', receiveMessage);
 
@@ -110,7 +111,7 @@ const Chatroom: React.FC = () => {
             type="text"
             placeholder="Message"
             value={chatmessage}
-            onChange={(e: React.ChangeEvent<any>) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setChatMessage(e.target.value)
             }
           />
@@ -121,5 +122,14 @@ const Chatroom: React.FC = () => {
     </>
   );
 };
+
+const Chatroom: React.FC = () => {
+  return (
+    <Suspense>
+      <ChatroomContent />
+    </Suspense>
+  )
+
+}
 
 export default Chatroom;
