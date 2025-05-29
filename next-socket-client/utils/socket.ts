@@ -5,9 +5,13 @@ import { io, Socket } from 'socket.io-client';
 type ClienttoServerEvents = {
   'private-chat': (roomId: string, username: string) => void;
   'create-room': () => void;
-  'message' :  (roomId: string, chatmessage: string, time: string) => void;
-}
-
+  message: (
+    roomId: string,
+    chatmessage: string,
+    time: string,
+    username: string,
+  ) => void;
+};
 
 type Msgtype = {
   senderId: string;
@@ -17,19 +21,19 @@ type Msgtype = {
 
 //Events Emitted by Server -> Client
 type ServertoClientEvents = {
-  'room-created': (roomId: string) => void; 
-  'receive-message': (data : Msgtype) => void;
-  'socket-length': (data : number) => void;
-}
+  'room-created': (roomId: string) => void;
+  'receive-message': (data: Msgtype) => void;
+  'socket-length': (data: number) => void;
+  isConnected: (value: boolean) => void;
+};
 
-const socket: Socket<ServertoClientEvents, ClienttoServerEvents> = io(process.env.NEXT_PUBLIC_BACKEND_SOCKET_URL || 'http://0.0.0.0:6006', {
-  autoConnect: false,
-});
+const socket: Socket<ServertoClientEvents, ClienttoServerEvents> = io(
+  process.env.NEXT_PUBLIC_BACKEND_SOCKET_URL || 'http://0.0.0.0:6006',
+);
 
 export default socket;
 
 //to maintain single socket connection across landing page where actual socket.connect() is happening
-
 
 /*
 Server generic order: <ClientToServerEvents, ServerToClientEvents>
