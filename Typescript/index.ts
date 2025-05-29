@@ -41,7 +41,6 @@ io.on('connection', (socket: Socket) => {
         })
 
         socket.emit('room-created', roomId)
-        console.log(map)
     })
 
 
@@ -57,7 +56,6 @@ io.on('connection', (socket: Socket) => {
         socket.emit('isConnected', RoomExists)
 
 
-        console.log(map)
         const roomSockets = await io.in(roomId).fetchSockets();
         
         setTimeout(() => {
@@ -67,7 +65,7 @@ io.on('connection', (socket: Socket) => {
     })
 
     socket.on('message', async (roomId: string, chatmessage: string, time: string, username: string) => {
-        console.log(roomId, chatmessage, time)
+
         const room: any = map.get(roomId)
 
         await room.users.add(username)
@@ -75,7 +73,6 @@ io.on('connection', (socket: Socket) => {
         room.lastActive = Date.now();
 
        const lastMsg = room.messages[room.messages.length -1]
-
 
         io.to(roomId).emit('receive-message', ({
             senderId: lastMsg.senderId,
@@ -85,19 +82,17 @@ io.on('connection', (socket: Socket) => {
 
     })
 
-
-
     socket.on('disconnect', () => {
         console.log(`Client ${socket.id} Disconnected!`)
     })
 
 })
 
-
+// cLean-up func to set off all the Rooms if theres no one in the room or after 1 Hr anyways
 setInterval(() => {
     const now = Date.now()
     for (let [key, value] of map.entries()) {
-        if (now - value.lastActive > hour) {
+        if (value.users.size == 0 || now - value.lastActive > hour) {
             map.delete(key)
         }
     }
