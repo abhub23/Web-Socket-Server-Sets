@@ -1,6 +1,5 @@
 'use client';
 
-import { io } from 'socket.io-client';
 import { useMessage } from '@/store/store';
 import { useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -9,111 +8,94 @@ import socket from '@/utils/socket';
 import type { Msgtype } from '@/store/store';
 import Button from '@/components/Button';
 import { CopyIcon } from '@radix-ui/react-icons';
+import { ToggleTheme } from '@/components/ToggleTheme';
+import { useScrollBottom } from '@/store/useScrollBottom';
+import { useEnter } from '@/store/useEnter';
 
-const Chatroom = () => {
+const Chatroom: React.FC = () => {
   const searchParams = useSearchParams();
-  const username = searchParams.get('username');
-  const roomId = searchParams.get('roomId');
+  const username = searchParams.get('username') ?? '';
+  const roomId = searchParams.get('roomId') ?? '';
   const [chatmessage, setChatMessage] = useState('');
   const { message, addMessage } = useMessage();
-  const [client, setClient] = useState('')
-  const [socketCount, setSocketCount] = useState<number>(0)
-
-  console.log('before', message);
+  const [socketCount, setSocketCount] = useState<number>(0);
+  const containerRef = useScrollBottom(message);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(roomId);
+    navigator.clipboard.writeText(String(roomId));
     toast.success(`Copied: ${roomId}`);
   };
 
   const currTime = () => {
-    return new Date().toLocaleTimeString('en-US', { hour12: true });
+    return new Date().toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    });
   };
-
-  useEffect(() => {
-    const handleEnter = (e: KeyboardEvent) => {
-      if (e.key == 'Enter') {
-        handleMessage();
-      }
-    };
-    window.addEventListener('keydown', handleEnter);
-
-    return () => {
-      window.removeEventListener('keydown', handleEnter);
-    };
-  });
 
   const receiveMessage = ({ senderId, message, time }: Msgtype) => {
-    console.log('Received message:', senderId, message, time);
     addMessage({ senderId, message, time });
-    setClient(senderId)
-    console.log('after', message);
   };
 
   useEffect(() => {
-    console.log(socket.connected)
     socket.on('receive-message', receiveMessage);
 
     socket.on('socket-length', (listeners: number) => {
-      setSocketCount(listeners)
-      console.log('socket lengthhhhhhhhhhhhhhh   :', listeners);
+      setSocketCount(listeners);
     });
 
     return () => {
       socket.off('receive-message', receiveMessage);
-      socket.off('socket-length')
+      socket.off('socket-length');
     };
-  },[]);
+  }, []);
 
   const handleMessage = () => {
     if (chatmessage == '') {
-      toast.error('Empty message cant be send');
+      toast.error(`Empty message cannot be send`);
       return;
     }
 
     const time = currTime();
-    console.log(time);
-    socket.emit('message', roomId, chatmessage, time);
-
-
-    console.log(
-      'message: ',
-      message,
-      'rooom id: ',
-      roomId,
-      'chat msg:',
-      chatmessage,
-    );
+    socket.emit('message', roomId, chatmessage, time, username);
+    setChatMessage('');
   };
+
+  const SendRef = useEnter(handleMessage);
   return (
     <>
-
-      <div className='bg-bg-[#575858]/40 /90 dark:bg-[#575858]/20 text-[18px] text-white/60 items-center flex justify-around lg:mt-[16px] lg:rounded-[6px] lg:h-[50px] lg:w-[680px] mx-auto'>
-        <div className="flex items-center mt-[4px] lg:mt-0 lg:text-[16px] text-[11px] lg:gap-2 gap-1">
+      <div className="mx-auto flex items-center justify-start bg-[#575858]/20 text-[12px] text-black lg:mt-[16px] lg:h-[50px] lg:w-[680px] lg:justify-around lg:rounded-[6px] lg:text-[16px] dark:bg-[#575858]/20 dark:text-white/60">
+        <div className="ml-3 flex h-[50px] items-center gap-1 lg:gap-2">
           Share Room Id :
-          <span className="lg:text-[16px] text-[14px] font-semibold">
+          <span className="text-[14px] font-semibold lg:text-[16px]">
             {roomId}
           </span>
           <CopyIcon
-            className="h-[34px] w-[20px] text-black/80 hover:text-black dark:text-white/60 dark:hover:text-white transition-colors duration-300 cursor-pointer"
+            className="h-[34px] w-[20px] cursor-pointer text-black/80 transition-colors duration-300 hover:text-black dark:text-white/60 dark:hover:text-white"
             onClick={handleCopy}
           />
         </div>
-        <p>Users: {socketCount} </p>
-      </div >
+        <p className="ml-4">Connected Users: {socketCount} </p>
+        <p className="fixed right-[10px] lg:top-[18px] lg:right-[26px]">
+          <ToggleTheme />
+        </p>
+      </div>
+
       <div
-        className='lg:h-[520px] lg:w-[680px] w-[350px] h-[600px] text-yellow-300 p-1 overflow-auto outline-none mx-auto rounded-[6px] border-1 lg:mt-[12px] border-black/50 dark:border-white/60 flex flex-col gap-1'
+        className="no-scrollbar mx-auto flex h-[580px] w-[360px] flex-col gap-1 border-1 border-black/30 p-1 outline-none lg:mt-[14px] lg:h-[520px] lg:w-[680px] lg:rounded-[6px] dark:border-b-white/20 lg:dark:border-white/20"
+        ref={containerRef}
       >
         {message.map((msg, id) => (
           <div
             key={id}
-            className={`flex ${client === msg.senderId ? 'justify-end mr-[8px]' : 'justify-start mr-[8px]'}`}
+            className={`flex ${msg.senderId == socket.id ? 'mr-[5px] justify-end' : 'ml-[5px] justify-start'}`}
           >
             <div
-              className={`text-white dark:text-black bg-black/85 font-medium my-[4px] dark:bg-white/90 border-1 break-words border-black/50 w-fit h-fit text-justify max-w-[430px] rounded-[6px] dark:border-white/60 p-[4px] px-[10px]`}
+              className={`my-[2px] h-fit w-fit max-w-[230px] rounded-[6px] border-1 border-black/50 bg-black/85 p-[4px] px-[10px] text-start text-[14px] font-medium break-words text-white lg:max-w-[430px] lg:text-[16px] dark:border-white/60 dark:bg-white dark:text-black`}
             >
               {msg.message}
-              <p className="text-zinc-300/80 dark:text-zinc-700 lg:text-[14px]">
+              <p className="text-[12px] text-zinc-300/80 lg:text-[12px] dark:text-zinc-700">
                 {msg.time}
               </p>
             </div>
@@ -121,12 +103,10 @@ const Chatroom = () => {
         ))}
       </div>
 
-
-      <div className="fixed bottom-[10px] lg:h-[60px] lg:w-[860px] left-1/2 transform -translate-x-1/2">
-        <Toaster />
-        <div className="flex flex-row mx-auto justify-center">
+      <div className="fixed bottom-[10px] left-1/2 h-[40px] w-full -translate-x-1/2 transform lg:h-[60px] lg:w-[860px]">
+        <div className="mx-auto flex flex-row justify-around lg:justify-center">
           <input
-            className="lg:h-[40px] lg:p-[8px] lg:w-[570px] lg:mr-3 border-1 rounded-[6px] outline-none border-black/80 dark:border-white/80 lg:text-[16px]"
+            className="h-[40px] w-[260px] rounded-[6px] border-1 border-black/30 p-[8px] outline-none lg:mr-3 lg:h-[42px] lg:w-[570px] lg:p-[12px] lg:text-[16px] dark:border-white/20"
             type="text"
             placeholder="Message"
             value={chatmessage}
@@ -134,9 +114,10 @@ const Chatroom = () => {
               setChatMessage(e.target.value)
             }
           />
-          <Button onClick={handleMessage} />
+          <Button onClick={handleMessage} ref={SendRef} />
         </div>
       </div>
+      <Toaster />
     </>
   );
 };

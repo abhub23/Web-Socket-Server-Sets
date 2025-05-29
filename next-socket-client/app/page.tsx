@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 import socket from '@/utils/socket';
 import Footer from '@/components/Footer';
 import { ToggleTheme } from '@/components/ToggleTheme';
+import { useEnter } from '@/store/useEnter';
+import { motion } from 'motion/react'
 
 export default function Home() {
   const { roomId, setRoomId } = useRoomId();
@@ -17,39 +19,42 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    socket.on('room-created', (roomId) => {
-      setRoomId(roomId)
-      console.log(roomId)
+    socket.on('room-created', (socketGeneratedRoomId) => {
+      setRoomId(socketGeneratedRoomId);
       toast.success(`Room Id Created ${roomId}`);
-    })
+    });
 
     return () => {
-      socket.off('room-created')
-    }
-  }, [roomId])
+      socket.off('room-created');
+      socket.off('isConnected')
+    };
+  }, [roomId]);
 
   const createId = () => {
-    socket.connect()
-    socket.emit('create-room')
+    socket.emit('create-room');
     setGenerate(true);
   };
 
-  const handleRoomJoin = (e: React.ChangeEvent<any>) => {
+  const handleRoomJoin = () => {
     if (!roomId) {
-      toast.error('Enter a valid room Id');
+      toast.error('Enter Room Id');
       return;
     } else if (username.trim() == '') {
       toast.error('Enter username');
       return;
     } else {
-      if (!socket.connected) {
-        socket.connect();
-      }
-      console.log(username, roomId);
       socket.emit('private-chat', roomId, username);
-      router.push(`/chat-room?username=${username}&roomId=${roomId}`);
+      socket.on('isConnected', (value: boolean) => {
+        if (value) {
+          router.push(`/chat-room?username=${username}&roomId=${roomId}`);
+        } else {
+          toast.error('This Room do not exist');
+        }
+      });
     }
   };
+
+  const EnterRef = useEnter(handleRoomJoin);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(roomId);
@@ -57,30 +62,35 @@ export default function Home() {
   };
 
   return (
-    <>
-      <div className={`lg:h-[50px] flex lg:px-[40px] lg:pt-[30px] px-[30px] pt-[30px] justify-end`}>
-        <ToggleTheme />
-      </div >
+    <motion.div
+      initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
+      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+      transition={{ type: 'spring', stiffness: 50, damping: 20 }}>
       <div
-        className={`lg:mt-[60px] mt-[110px] flex flex-col lg:w-[1000px] lg:h-[400px] h-[330px] mx-auto `}
+        className={`flex justify-end px-[14px] pt-[20px] lg:h-[50px] lg:px-[40px] lg:pt-[30px]`}
       >
-        <h1 className="pt-[20px] text-[33px] lg:text-[78px] mx-auto font-bold bg-gradient-to-r from-fuchsia-400 via-pink-400 to-red-400 bg-clip-text text-transparent">
+        <ToggleTheme />
+      </div>
+      <div
+        className={`mx-auto mt-[110px] flex h-[330px] flex-col lg:mt-[60px] lg:h-[400px] lg:w-[1000px]`}
+      >
+        <motion.h1 className="mx-auto bg-gradient-to-r from-fuchsia-400 via-pink-400 to-red-400 bg-clip-text pt-[20px] text-[33px] font-bold text-transparent lg:text-[78px]">
           Welcome to Chathub
-        </h1>
+        </motion.h1>
 
         <Toaster />
-        <div className="flex flex-col gap-[4px] mx-auto">
-          <div className="lg:p-4 p-2 flex flex-col mx-auto">
+        <div className="mx-auto  flex flex-col gap-[4px]">
+          <div className="mx-auto flex flex-col p-2 lg:p-4">
             <input
-              className="lg:h-[40px] h-[40px] lg:w-[560px] w-[320px] lg:rounded-[4px] p-2 rounded-[4px] lg:text-[16px] text-[15px] lg:border-1 border-1 outline-none border-black/50 dark:border-white/50 mx-auto "
+              className="mx-auto h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[15px] outline-none lg:h-[40px] lg:w-[560px] lg:rounded-[4px] lg:border-1 lg:text-[16px] dark:border-white/50"
               type="text"
               placeholder="Enter Room Id"
               maxLength={6}
               value={roomId}
-              onChange={(e: any) => setRoomId(e.target.value) }
+              onChange={(e: any) => setRoomId(e.target.value)}
             />
             <input
-              className="lg:h-[40px] h-[40px] lg:w-[560px] w-[320px] lg:mt-[10px] mt-[8px] lg:rounded-[4px] p-2 rounded-[4px] lg:text-[16px] text-[15px] lg:border-1 border-1 outline-none border-black/50 dark:border-white/50 mx-auto "
+              className="mx-auto mt-[8px] h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[15px] outline-none lg:mt-[10px] lg:h-[40px] lg:w-[560px] lg:rounded-[4px] lg:border-1 lg:text-[16px] dark:border-white/50"
               type="text"
               placeholder="Username"
               maxLength={20}
@@ -88,38 +98,40 @@ export default function Home() {
               onChange={(e: any) => setUsername(e.target.value)}
             />
             <button
-              className="lg:h-[38px] h-[38px] font-medium lg:w-[560px] w-[320px] lg:rounded-[6px] rounded-[4px] lg:text-[16px] text-[15px] lg:mt-[16px] mt-[10px] lg:text[14px] text-white dark:text-black bg-black dark:bg-white hover:bg-black/85 transition-all duration-300 hover:dark:bg-white/90 cursor-pointer"
+              className="lg:text[14px] mt-[10px] h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-black text-[15px] font-medium text-white transition-all duration-300 hover:bg-black/85 lg:mt-[16px] lg:h-[38px] lg:w-[560px] lg:rounded-[6px] lg:text-[16px] dark:bg-white dark:text-black hover:dark:bg-white/90"
               onClick={handleRoomJoin}
+              ref={EnterRef}
             >
               Join Room
             </button>
           </div>
-          <span className="p-2 lg:text-[16px] text-[15px] lg:w-[700px] text-center w-[240px] mx-auto">
+          <span className="mx-auto w-[240px] p-2 text-center text-[15px] lg:w-[700px] lg:text-[16px]">
             Don't have any Room to join? Create your own Private Room
           </span>
           <button
-            className="lg:h-[38px] h-[38px] lg:w-[560px] font-medium w-[320px] lg:rounded-[6px] rounded-[4px] lg:text-[16px] text-[15px] lg:mt-[1px] mx-auto text-white bg-blue-400 hover:bg-blue-400/90 transition-all duration-300 cursor-pointer"
+            className="mx-auto h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-blue-400 text-[15px] font-medium text-white transition-all duration-300 hover:bg-blue-400/90 lg:mt-[1px] lg:h-[38px] lg:w-[560px] lg:rounded-[6px] lg:text-[16px]"
             onClick={createId}
           >
             Create Room
           </button>
           {generate == true && (
-            <div className="lg:p-2 mx-auto">
-              <div className="flex items-center mt-[4px] lg:mt-0 lg:text-[16px] text-[11px] lg:gap-2 gap-1">
+            <div className="mx-auto mt-[4px] flex w-[240px] flex-col items-center text-center text-[15px] lg:mt-0 lg:w-fit lg:flex-row lg:text-[16px]">
+              <div className="mx-auto w-[240px] p-2 text-center text-[15px] lg:w-fit lg:text-[16px]">
                 Share this Room Id with your friends to chat privately:
-                <span className="lg:text-[18px] text-[14px]  font-semibold">
-                  {roomId}
-                </span>
+              </div>
+              <span className="mt-[-12px] flex w-[120px] items-center justify-center text-[16px] font-semibold lg:mt-[0px] lg:ml-[-8px] lg:w-fit lg:text-[18px]">
+                <span className="w-fit px-[8px]">{roomId}</span>
+
                 <CopyIcon
-                  className="h-[40px] w-[22px] text-black/80 hover:text-black dark:text-white/80 dark:hover:text-white transition-colors duration-300 cursor-pointer"
+                  className="h-[40px] w-[22px] cursor-pointer text-black/80 transition-colors duration-300 hover:text-black dark:text-white/80 dark:hover:text-white"
                   onClick={handleCopy}
                 />
-              </div>
+              </span>
             </div>
           )}
         </div>
       </div>
       <Footer />
-    </>
+    </motion.div>
   );
 }
