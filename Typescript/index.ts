@@ -12,36 +12,75 @@ const io = new Server(httpserver, {
     }
 })
 
+type Msgtype = {
+    senderId: string;
+    message: string;
+    time: string;
+};
+
+type Roomdata = {
+    users: Set<string>;
+    messages: Msgtype[]
+    lastActive: number;
+}
+
+const map = new Map<string, Roomdata>()
+const hour = 3600000
+
 io.on('connection', (socket: Socket) => {
     console.log(`Client connected with socket ID: ${socket.id}`)
 
 
     socket.on('create-room', () => {
         const roomId = createRoomID()
+
+        map.set(roomId, {
+            users: new Set<string>(),
+            messages: [],
+            lastActive: Date.now()
+        })
+
         socket.emit('room-created', roomId)
+        console.log(map)
     })
 
 
     socket.on('private-chat', async (roomId: string, username: string) => {
-        socket.join(roomId)
 
+        let RoomExists: boolean;
+        if (map.has(roomId)) {
+            RoomExists = true
+            socket.join(roomId)
+        } else {
+            RoomExists = false
+        }
+        socket.emit('isConnected', RoomExists)
+
+
+        console.log(map)
         const roomSockets = await io.in(roomId).fetchSockets();
-        const length = roomSockets.length;
         
         setTimeout(() => {
-            io.to(roomId).emit('socket-length', length);
+            io.to(roomId).emit('socket-length', roomSockets.length);
         }, 1000);
-
 
     })
 
-    socket.on('message', (roomId: string, chatmessage: string, time: string) => {
+    socket.on('message', async (roomId: string, chatmessage: string, time: string, username: string) => {
         console.log(roomId, chatmessage, time)
+        const room: any = map.get(roomId)
+
+        await room.users.add(username)
+        await room.messages.push({senderId: socket.id,message: chatmessage, time: time})
+        room.lastActive = Date.now();
+
+       const lastMsg = room.messages[room.messages.length -1]
+
 
         io.to(roomId).emit('receive-message', ({
-            senderId: socket.id,
-            message: chatmessage,
-            time: time
+            senderId: lastMsg.senderId,
+            message: lastMsg.message,
+            time: lastMsg.time
         }))
 
     })
@@ -53,6 +92,16 @@ io.on('connection', (socket: Socket) => {
     })
 
 })
+
+
+setInterval(() => {
+    const now = Date.now()
+    for (let [key, value] of map.entries()) {
+        if (now - value.lastActive > hour) {
+            map.delete(key)
+        }
+    }
+}, hour)
 
 httpserver.listen(Port, '0.0.0.0', () => {
     console.log(`SocketIO Server Listening on Port: ${Port}`)
