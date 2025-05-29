@@ -11,7 +11,9 @@ const io = new Server(httpserver, {
         origin: '*'
     }
 })
-
+app.get('/', (req, res) => {
+    res.json({message: 'Server is alive'})
+})
 type Msgtype = {
     senderId: string;
     message: string;
