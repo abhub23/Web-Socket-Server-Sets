@@ -7,7 +7,7 @@ type ClickType = {
 const Button = forwardRef<HTMLButtonElement, ClickType>(({ onClick }, ref) => {
   return (
     <button
-      className="lg:h-[40px] h-[40px] w-[90px] lg:w-[100px] bg-black rounded-[8px] flex justify-center items-center lg:text-[17px] font-medium dark:bg-white text-white dark:text-black cursor-pointer"
+      className="flex h-[40px] w-[90px] cursor-pointer items-center justify-center rounded-[8px] bg-black font-medium text-white lg:h-[40px] lg:w-[100px] lg:text-[17px] dark:bg-white dark:text-black"
       onClick={onClick}
       ref={ref}
     >
@@ -15,7 +15,7 @@ const Button = forwardRef<HTMLButtonElement, ClickType>(({ onClick }, ref) => {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
-          className="lg:w-[20px] lg:h-[20px] h-[16px] w-[16px] pt-[1px]"
+          className="h-[16px] w-[16px] pt-[1px] lg:h-[20px] lg:w-[20px]"
         >
           <path fill="none" d="M0 0h24v24H0z" />
           <path
@@ -24,7 +24,7 @@ const Button = forwardRef<HTMLButtonElement, ClickType>(({ onClick }, ref) => {
           />
         </svg>
       </div>
-      <span className="lg:p-[6px] p-[4px]">Send</span>
+      <span className="p-[4px] lg:p-[6px]">Send</span>
     </button>
   );
 });

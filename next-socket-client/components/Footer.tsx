@@ -2,10 +2,10 @@ import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <div className="h-10 bg-transparent lg:mt-[136px] mt-[150px] lg:text-[16px] text-[12px] flex justify-center items-center mb-2 dark:text-white">
+    <div className="mt-[152px] mb-2 flex lg:h-10 h-6 items-center justify-center text-[12px] lg:mt-[136px] lg:text-[16px] dark:text-white">
       Designed and Developed by
       <Link
-        className="text-transparent ml-1"
+        className="ml-1 text-transparent"
         style={{
           background:
             'linear-gradient(to right, oklch(71.8% 0.202 349.761), oklch(74% 0.238 322.16), oklch(70.2% 0.183 293.541))',
