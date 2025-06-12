@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://github.com/abhub23'),
   title: 'Chathub',
   description: 'Chathub, a private room chat application made with Socket.IO',
+  icons: {
+    icon: "/chat.png"
+  },
 
   keywords: [
     'Abdullah Mukri',
