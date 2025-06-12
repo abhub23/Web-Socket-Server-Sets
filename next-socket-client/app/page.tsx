@@ -63,9 +63,9 @@ export default function Home() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
+      initial={{ opacity: 0, y: 20, filter: 'blur(16px)' }}
       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      transition={{ type: 'spring', stiffness: 50, damping: 20 }}
+      transition={{ duration: 0.5 }}
       className='overflow-hidden'>
       <div
         className={`flex justify-end px-[14px] pt-[20px] lg:h-[50px] lg:px-[30px] lg:pt-[30px]`}
