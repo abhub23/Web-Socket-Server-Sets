@@ -4,9 +4,9 @@ import './globals.css';
 import { Bricolage } from '@/utils/fonts';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://github.com/abhub23'),
-  title: 'Chathub',
-  description: 'Chathub, a private room chat application made with Socket.IO',
+  metadataBase: new URL('https://privado.abdullahtech.dev'),
+  title: 'Privado - A Real Time Chat Application',
+  description: 'Privado, a private room chat application made with Typescript and web-sockets leveraging Socket.IO',
   icons: {
     icon: "/chat.png"
   },
@@ -16,8 +16,9 @@ export const metadata: Metadata = {
     'Software Engineer',
     'Software Developer',
     'Fullstack Developer',
+    'Web sockets',
     'Socket.IO',
-    'Chathub',
+    'Privado',
     'Javascript',
     'Typescript',
     'React js',
@@ -31,12 +32,12 @@ export const metadata: Metadata = {
   publisher: 'Abdullah Mukri',
   twitter: {
     site: 'https://x.com/abdullah_twt23',
-    siteId: 'https://x.com/abdullah_twt23',
+    siteId: 'abdullah_twt23',
   },
 
   appLinks: {
     web: {
-      url: new URL('https://chathub.abdullahtech.dev'),
+      url: new URL('https://privado.abdullahtech.dev'),
     },
   },
 

@@ -75,9 +75,9 @@ export default function Home() {
       <div
         className={`mx-auto mt-[110px] flex h-[330px] flex-col lg:mt-[60px] lg:h-[400px] lg:w-[1000px]`}
       >
-        <motion.h1 className="mx-auto bg-gradient-to-r from-fuchsia-400 via-pink-400 to-red-400 bg-clip-text pt-[20px] text-[33px] font-bold text-transparent lg:text-[78px]">
-          Welcome to Chathub
-        </motion.h1>
+        <h1 className="mx-auto bg-gradient-to-r from-fuchsia-400 via-pink-400 to-red-400 bg-clip-text pt-[20px] text-[33px] font-bold text-transparent lg:text-[78px]">
+          Welcome to Privado
+        </h1>
 
         <Toaster />
         <div className="mx-auto  flex flex-col gap-[4px]">
