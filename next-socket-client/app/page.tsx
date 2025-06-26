@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { CopyIcon } from '@radix-ui/react-icons';
 import { toast, Toaster } from 'sonner';
-import { useGenerate, useRoomId, useUsername } from '@/store/store';
+import { useGenerate, usePending, useRoomId, useUsername } from '@/store/store';
 import { useRouter } from 'next/navigation';
 import socket from '@/utils/socket';
 import Footer from '@/components/Footer';
@@ -15,12 +15,15 @@ export default function Home() {
   const { roomId, setRoomId } = useRoomId();
   const { username, setUsername } = useUsername();
   const { generate, setGenerate } = useGenerate();
+  const { isPending, setPending } = usePending();
 
   const router = useRouter();
 
   useEffect(() => {
     socket.on('room-created', (socketGeneratedRoomId) => {
       setRoomId(socketGeneratedRoomId);
+      setGenerate(true);
+      setPending(false)
       toast.success(`Room Id Created ${roomId}`);
     });
 
@@ -31,8 +34,8 @@ export default function Home() {
   }, [roomId]);
 
   const createId = () => {
+    setPending(true);
     socket.emit('create-room');
-    setGenerate(true);
   };
 
   const handleRoomJoin = () => {
@@ -113,7 +116,7 @@ export default function Home() {
             className="mx-auto h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-blue-400 text-[15px] font-medium text-white transition-all duration-300 hover:bg-blue-400/90 lg:mt-[1px] lg:h-[38px] lg:w-[560px] lg:rounded-[6px] lg:text-[16px]"
             onClick={createId}
           >
-            Create Room
+            {isPending ? "Creating..." : "Create Room"}
           </button>
           {generate == true && (
             <div className="mx-auto mt-[4px] flex w-[240px] flex-col items-center text-center text-[15px] lg:mt-0 lg:w-fit lg:flex-row lg:text-[16px]">
