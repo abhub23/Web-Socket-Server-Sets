@@ -48,3 +48,13 @@ export const useMessage = create<Messagetype>((set) => ({
       message: [...state.message, newMessage],
     })),
 }));
+
+type PendingType = {
+  isPending: boolean;
+  setPending: (status: boolean) => void
+}
+
+export const usePending = create<PendingType>((set) => ({
+  isPending: false,
+  setPending: (status: boolean) => set({isPending: status})
+}))
