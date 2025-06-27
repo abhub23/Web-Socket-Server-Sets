@@ -6,9 +6,10 @@ import { Bricolage } from '@/utils/fonts';
 export const metadata: Metadata = {
   metadataBase: new URL('https://privado.abdullahtech.dev'),
   title: 'Privado - A Real Time Chat Application',
-  description: 'Privado, a private room chat application made with Typescript and web-sockets leveraging Socket.IO',
+  description:
+    'Privado, a private room chat application made with Typescript and web-sockets leveraging Socket.IO',
   icons: {
-    icon: "/chat.png"
+    icon: '/chat.png',
   },
 
   keywords: [

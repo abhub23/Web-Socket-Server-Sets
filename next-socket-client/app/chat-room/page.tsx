@@ -128,8 +128,7 @@ const Chatroom: React.FC = () => {
     <Suspense>
       <ChatroomContent />
     </Suspense>
-  )
-
-}
+  );
+};
 
 export default Chatroom;
