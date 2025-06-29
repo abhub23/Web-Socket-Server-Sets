@@ -2,15 +2,16 @@
 
 import { useEffect } from 'react';
 import { CopyIcon } from '@radix-ui/react-icons';
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 import { useGenerate, usePending, useRoomId, useUsername } from '@/store/store';
 import { useRouter } from 'next/navigation';
 import socket from '@/utils/socket';
 import Footer from '@/components/Footer';
 import { ToggleTheme } from '@/components/ToggleTheme';
 import { useEnter } from '@/store/useEnter';
-import { motion } from 'motion/react';
+import { easeInOut, motion } from 'motion/react';
 import Loader from '@/components/Loader';
+import AnimatedText from '@/components/AnimatedText';
 
 export default function Home() {
   const { roomId, setRoomId } = useRoomId();
@@ -25,7 +26,7 @@ export default function Home() {
       setRoomId(socketGeneratedRoomId);
       setGenerate(true);
       setPending(false);
-      toast.success(`Room Id Created ${roomId}`);
+      toast.success(`New Room created`);
     });
 
     return () => {
@@ -66,29 +67,23 @@ export default function Home() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20, filter: 'blur(16px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      transition={{ duration: 0.5 }}
-      className="overflow-hidden"
-    >
-      <div
-        className={`flex justify-end px-[14px] pt-[20px] lg:h-[50px] lg:px-[30px] lg:pt-[30px]`}
-      >
+    <>
+      <span className="mt-[150px] flex items-center justify-center lg:mt-[120px]">
+        <AnimatedText text={'Welcome to Privado'} />
+      </span>
+      <div className={`fixed top-[20px] right-[20px]`}>
         <ToggleTheme />
       </div>
-      <div
-        className={`mx-auto mt-[110px] flex h-[330px] flex-col lg:mt-[60px] lg:h-[400px] lg:w-[1000px]`}
+      <motion.div
+        initial={{ opacity: 0, y: 20, filter: 'blur(16px)' }}
+        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+        transition={{ duration: 0.5, ease: easeInOut }}
+        className={`mx-auto mt-[10px] flex h-[330px] flex-col lg:mt-[1px] lg:h-[320px] lg:w-[1000px]`}
       >
-        <h1 className="mx-auto bg-gradient-to-r from-fuchsia-400 via-pink-400 to-red-400 bg-clip-text pt-[20px] text-[33px] font-bold text-transparent lg:text-[78px]">
-          Welcome to Privado
-        </h1>
-
-        <Toaster />
         <div className="mx-auto flex flex-col gap-[4px]">
           <div className="mx-auto flex flex-col p-2 lg:p-4">
             <input
-              className="mx-auto h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[15px] outline-none lg:h-[40px] lg:w-[560px] lg:rounded-[4px] lg:border-1 lg:text-[16px] dark:border-white/50"
+              className="mx-auto h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[15px] outline-none lg:h-[40px] lg:w-[580px] lg:rounded-[4px] lg:border-1 lg:text-[16px] dark:border-white/50"
               type="text"
               placeholder="Enter Room Id"
               maxLength={6}
@@ -98,7 +93,7 @@ export default function Home() {
               }
             />
             <input
-              className="mx-auto mt-[8px] h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[15px] outline-none lg:mt-[10px] lg:h-[40px] lg:w-[560px] lg:rounded-[4px] lg:border-1 lg:text-[16px] dark:border-white/50"
+              className="mx-auto mt-[8px] h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[15px] outline-none lg:mt-[10px] lg:h-[40px] lg:w-[580px] lg:rounded-[4px] lg:border-1 lg:text-[16px] dark:border-white/50"
               type="text"
               placeholder="Username"
               maxLength={20}
@@ -108,7 +103,7 @@ export default function Home() {
               }
             />
             <button
-              className="lg:text[14px] mt-[10px] h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-black text-[15px] font-medium text-white transition-all duration-300 hover:bg-black/85 lg:mt-[16px] lg:h-[38px] lg:w-[560px] lg:rounded-[6px] lg:text-[16px] dark:bg-white dark:text-black hover:dark:bg-white/90"
+              className="lg:text[14px] mt-[10px] h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-black text-[15px] font-medium text-white transition-all duration-300 hover:bg-black/85 lg:mt-[16px] lg:h-[40px] lg:w-[580px] lg:rounded-[6px] lg:text-[16px] dark:bg-white dark:text-black hover:dark:bg-white/90"
               onClick={handleRoomJoin}
               ref={EnterRef}
             >
@@ -119,7 +114,7 @@ export default function Home() {
             Don&apos;t have any Room to join? Create your own Private Room
           </span>
           <button
-            className="mx-auto h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-blue-400 text-[15px] font-medium text-white transition-all duration-300 hover:bg-blue-400/90 lg:mt-[1px] lg:h-[38px] lg:w-[560px] lg:rounded-[6px] lg:text-[16px]"
+            className="mx-auto h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-blue-400 text-[15px] font-medium text-white transition-all duration-300 hover:bg-blue-400/90 lg:mt-[1px] lg:h-[40px] lg:w-[580px] lg:rounded-[6px] lg:text-[16px]"
             onClick={createId}
           >
             {isPending ? (
@@ -146,8 +141,8 @@ export default function Home() {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
       <Footer />
-    </motion.div>
+    </>
   );
 }

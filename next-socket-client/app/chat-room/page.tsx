@@ -3,7 +3,7 @@
 import { useMessage } from '@/store/store';
 import { useSearchParams } from 'next/navigation';
 import React, { Suspense, useEffect, useState } from 'react';
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 import socket from '@/utils/socket';
 import type { Msgtype } from '@/store/store';
 import Button from '@/components/Button';
@@ -118,7 +118,6 @@ const ChatroomContent: React.FC = () => {
           <Button onClick={handleMessage} ref={SendRef} />
         </div>
       </div>
-      <Toaster />
     </>
   );
 };

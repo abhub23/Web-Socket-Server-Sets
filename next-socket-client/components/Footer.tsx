@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const Footer = () => {
   return (
-    <div className="mt-[152px] flex h-6 items-center justify-center text-[12px] lg:mt-[142px] lg:h-6 lg:text-[16px] dark:text-white">
+    <div className="mt-[98px] flex h-6 items-center justify-center text-[12px] lg:mt-[85px] lg:h-6 lg:text-[16px] dark:text-white">
       Designed and Developed by
       <Link
         className="ml-1 text-transparent"
