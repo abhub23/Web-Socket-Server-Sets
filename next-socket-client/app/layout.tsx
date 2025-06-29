@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
 import './globals.css';
 import { Bricolage } from '@/utils/fonts';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://privado.abdullahtech.dev'),
@@ -60,6 +61,7 @@ export default function RootLayout({
       <body className={` ${Bricolage} `}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
