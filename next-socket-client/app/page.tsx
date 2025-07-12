@@ -45,7 +45,7 @@ export default function Home() {
       toast.error('Enter Room Id');
       return;
     } else if (username.trim() == '') {
-      toast.error('Enter username');
+      toast.error('Enter your name');
       return;
     } else {
       socket.emit('private-chat', roomId, username);
@@ -95,7 +95,7 @@ export default function Home() {
             <input
               className="mx-auto mt-[8px] h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[15px] outline-none lg:mt-[10px] lg:h-[40px] lg:w-[580px] lg:rounded-[4px] lg:border-1 lg:text-[16px] dark:border-white/50"
               type="text"
-              placeholder="Username"
+              placeholder="Enter your name"
               maxLength={20}
               value={username}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

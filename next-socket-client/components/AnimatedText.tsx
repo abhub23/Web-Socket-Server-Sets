@@ -33,13 +33,13 @@ const AnimatedText: FC<AnimateType> = ({ text }) => {
   return (
     <h1
       ref={scope}
-      className="pt-5 text-center text-[33px] font-bold lg:text-[78px]"
+      className="pt-5 text-center text-[33px] font-bold lg:text-[70px]"
     >
       {text.split(' ').map((word, idx) => (
         <motion.span
           initial={{ opacity: 0, y: 10, filter: 'blur(30px)' }}
           key={idx}
-          className="bg-gradient-to-r from-fuchsia-400 via-pink-400 to-red-400 bg-clip-text text-transparent"
+          className="text-black/90 dark:text-white/90"
         >
           {word + ' '}
         </motion.span>
