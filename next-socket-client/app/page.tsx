@@ -10,7 +10,7 @@ import Footer from '@/components/Footer';
 import { ToggleTheme } from '@/components/ToggleTheme';
 import { useEnter } from '@/store/useEnter';
 import { easeInOut, motion } from 'motion/react';
-import Loader from '@/components/Loader';
+import { Loader } from 'lucide-react';
 import AnimatedText from '@/components/AnimatedText';
 
 export default function Home() {
@@ -119,7 +119,7 @@ export default function Home() {
           >
             {isPending ? (
               <span className="flex flex-row items-center justify-center gap-x-2">
-                Creating... <Loader />
+                Creating <Loader className="animate-spin" />
               </span>
             ) : (
               'Create New Room'
