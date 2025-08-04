@@ -29,7 +29,7 @@ type Child = {
   children: React.ReactNode;
 };
 
-const SafeRender: React.FC<Child> = ({ children }) => {
+export const SafeRender: React.FC<Child> = ({ children }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

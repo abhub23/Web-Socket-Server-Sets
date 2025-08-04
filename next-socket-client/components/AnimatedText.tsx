@@ -39,7 +39,7 @@ const AnimatedText: FC<AnimateType> = ({ text }) => {
         <motion.span
           initial={{ opacity: 0, y: 10, filter: 'blur(30px)' }}
           key={idx}
-          className="tracking-tight text-black/90 dark:text-white/90"
+          className="tracking-tight text-neutral-800 dark:text-neutral-200"
         >
           {word + ' '}
         </motion.span>
