@@ -66,8 +66,8 @@ const ChatroomContent: React.FC = () => {
   const SendRef = useEnter(handleMessage);
   return (
     <>
-      <div className="mx-auto flex items-center justify-start bg-[#575858]/20 text-[12px] text-black lg:mt-[16px] lg:h-[50px] lg:w-[680px] lg:justify-around lg:rounded-[6px] lg:text-[16px] dark:bg-[#575858]/20 dark:text-white/60">
-        <div className="ml-3 flex h-[50px] items-center gap-1 lg:gap-2">
+      <div className="mx-auto flex items-center justify-start bg-[#575858]/20 text-[11px] text-black lg:mt-[16px] lg:h-[50px] lg:w-[680px] lg:justify-around lg:rounded-[6px] lg:text-[16px] dark:bg-[#575858]/20 dark:text-white/60">
+        <div className="lg:ml-3 ml-2 flex h-[50px] items-center gap-[2px] lg:gap-2">
           Share Room Id :
           <span className="text-[14px] font-semibold lg:text-[16px]">
             {roomId}
@@ -78,7 +78,7 @@ const ChatroomContent: React.FC = () => {
           />
         </div>
         <p className="ml-4">Connected Users: {socketCount} </p>
-        <p className="fixed right-[10px] lg:top-[18px] lg:right-[26px]">
+        <p className="fixed right-[2px] lg:top-[18px] lg:right-[26px]">
           <ToggleTheme />
         </p>
       </div>
