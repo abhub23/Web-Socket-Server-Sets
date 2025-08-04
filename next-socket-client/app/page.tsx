@@ -70,7 +70,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-neutral-100 dark:bg-neutral-950">
+    <div className="relative lg:min-h-screen min-h-svh w-full bg-neutral-100 dark:bg-neutral-950">
       <SafeRender>
         <div
           className="absolute inset-0 z-0"
@@ -135,7 +135,7 @@ export default function Home() {
                   Join Room
                 </button>
               </div>
-              <span className="mx-auto w-[240px] p-2 text-center text-[15px] lg:w-[700px] lg:text-[16px]">
+              <span className="mx-auto w-[240px] p-2 text-center text-[13px] lg:w-[700px] lg:text-[15px]">
                 Don&apos;t have any Room to join? Create your own Private Room
               </span>
               <button
@@ -152,7 +152,7 @@ export default function Home() {
               </button>
               {generate == true && (
                 <div className="mx-auto mt-[4px] flex w-[240px] flex-col items-center text-center text-[15px] lg:mt-0 lg:w-fit lg:flex-row lg:text-[16px]">
-                  <div className="mx-auto w-[240px] p-2 text-center text-[15px] lg:w-fit lg:text-[16px]">
+                  <div className="mx-auto w-[240px] p-2 text-center text-[13px] lg:w-fit lg:text-[14px]">
                     Share this Room Id with your friends to chat privately:
                   </div>
                   <span className="mt-[-12px] flex w-[120px] items-center justify-center text-[16px] font-semibold lg:mt-[0px] lg:ml-[-8px] lg:w-fit lg:text-[18px]">

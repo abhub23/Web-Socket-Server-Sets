@@ -33,7 +33,7 @@ const AnimatedText: FC<AnimateType> = ({ text }) => {
   return (
     <h1
       ref={scope}
-      className="pt-5 text-center text-[33px] font-bold lg:text-[70px]"
+      className="pt-5 text-center text-[32px] font-bold lg:text-[70px]"
     >
       {text.split(' ').map((word, idx) => (
         <motion.span
