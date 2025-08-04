@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ThemeProvider } from 'next-themes';
 import './globals.css';
-import { Bricolage } from '@/utils/fonts';
+import { Jetmono } from '@/utils/fonts';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
@@ -58,7 +58,7 @@ export default function RootLayout({
       style={{ colorScheme: 'light' }}
       suppressHydrationWarning
     >
-      <body className={` ${Bricolage} `}>
+      <body className={` ${Jetmono} `}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Toaster />
