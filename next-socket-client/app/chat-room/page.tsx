@@ -96,7 +96,7 @@ const ChatroomContent: React.FC = () => {
               className={`my-[2px] h-fit w-fit max-w-[230px] rounded-[6px] border-1 border-black/50 bg-black/85 p-[4px] px-[10px] text-start text-[14px] font-medium break-words text-white lg:max-w-[430px] lg:text-[16px] dark:border-white/60 dark:bg-white dark:text-black`}
             >
               {msg.message}
-              <p className="text-[12px] text-zinc-300/80 lg:text-[12px] dark:text-zinc-700">
+              <p className="text-[10px] text-zinc-300/80 lg:text-[10px] dark:text-zinc-700">
                 {msg.time}
               </p>
             </div>
