@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { CopyIcon } from '@radix-ui/react-icons';
+import { useEffect, useState } from 'react';
+import { CopyIcon, CheckIcon } from '@radix-ui/react-icons';
 import { toast } from 'sonner';
 import { useGenerate, usePending, useRoomId, useUsername } from '@/store/store';
 import { useRouter } from 'next/navigation';
@@ -19,6 +19,7 @@ export default function Home() {
   const { username, setUsername } = useUsername();
   const { generate, setGenerate } = useGenerate();
   const { isPending, setPending } = usePending();
+  const [copied, setCopied] = useState(false);
 
   const { theme } = useTheme();
 
@@ -40,6 +41,7 @@ export default function Home() {
 
   const createId = () => {
     setPending(true);
+    setCopied(false);
     socket.emit('create-room');
   };
 
@@ -66,11 +68,12 @@ export default function Home() {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(roomId);
+    setCopied(true);
     toast.success(`Copied: ${roomId}`);
   };
 
   return (
-    <div className="relative lg:min-h-screen min-h-svh w-full bg-neutral-100 dark:bg-neutral-950">
+    <div className="relative min-h-svh w-full bg-neutral-100 lg:min-h-screen dark:bg-neutral-950">
       <SafeRender>
         <div
           className="absolute inset-0 z-0"
@@ -92,7 +95,6 @@ export default function Home() {
         `,
           }}
         >
-
           <span className="mt-[150px] flex items-center justify-center lg:mt-[120px]">
             <AnimatedText text={'Welcome to Privado'} />
           </span>
@@ -157,11 +159,14 @@ export default function Home() {
                   </div>
                   <span className="mt-[-12px] flex w-[120px] items-center justify-center text-[16px] font-semibold lg:mt-[0px] lg:ml-[-8px] lg:w-fit lg:text-[18px]">
                     <span className="w-fit px-[8px]">{roomId}</span>
-
-                    <CopyIcon
-                      className="h-[40px] w-[22px] cursor-pointer text-black/80 transition-colors duration-300 hover:text-black dark:text-white/80 dark:hover:text-white"
-                      onClick={handleCopy}
-                    />
+                    {copied ? (
+                      <CheckIcon className="h-[40px] w-[22px] text-black/80 transition-colors duration-300 hover:text-black dark:text-white/80 dark:hover:text-white" />
+                    ) : (
+                      <CopyIcon
+                        className="h-[40px] w-[22px] cursor-pointer text-black/80 transition-colors duration-300 hover:text-black dark:text-white/80 dark:hover:text-white"
+                        onClick={handleCopy}
+                      />
+                    )}
                   </span>
                 </div>
               )}

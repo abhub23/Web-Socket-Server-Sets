@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import socket from '@/utils/socket';
 import type { Msgtype } from '@/store/store';
 import Button from '@/components/Button';
-import { CopyIcon } from '@radix-ui/react-icons';
+import { CopyIcon, CheckIcon } from '@radix-ui/react-icons';
 import { ToggleTheme } from '@/components/ToggleTheme';
 import { useScrollBottom } from '@/store/useScrollBottom';
 import { useEnter } from '@/store/useEnter';
@@ -19,10 +19,12 @@ const ChatroomContent: React.FC = () => {
   const [chatmessage, setChatMessage] = useState('');
   const { message, addMessage } = useMessage();
   const [socketCount, setSocketCount] = useState<number>(0);
+  const [copied, setCopied] = useState(false);
   const containerRef = useScrollBottom(message);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(String(roomId));
+    setCopied(true);
     toast.success(`Copied: ${roomId}`);
   };
 
@@ -67,15 +69,19 @@ const ChatroomContent: React.FC = () => {
   return (
     <>
       <div className="mx-auto flex items-center justify-start bg-[#575858]/20 text-[11px] text-black lg:mt-[16px] lg:h-[50px] lg:w-[680px] lg:justify-around lg:rounded-[6px] lg:text-[16px] dark:bg-[#575858]/20 dark:text-white/60">
-        <div className="lg:ml-3 ml-2 flex h-[50px] items-center gap-[2px] lg:gap-2">
+        <div className="ml-2 flex h-[50px] items-center gap-[2px] lg:ml-3 lg:gap-2">
           Share Room Id :
           <span className="text-[14px] font-semibold lg:text-[16px]">
             {roomId}
           </span>
-          <CopyIcon
-            className="h-[34px] w-[20px] cursor-pointer text-black/80 transition-colors duration-300 hover:text-black dark:text-white/60 dark:hover:text-white"
-            onClick={handleCopy}
-          />
+          {copied ? (
+            <CheckIcon className="h-[34px] w-[20px] cursor-pointer text-black/80 transition-colors duration-300 hover:text-black dark:text-white/60 dark:hover:text-white" />
+          ) : (
+            <CopyIcon
+              className="h-[34px] w-[20px] cursor-pointer text-black/80 transition-colors duration-300 hover:text-black dark:text-white/60 dark:hover:text-white"
+              onClick={handleCopy}
+            />
+          )}
         </div>
         <p className="ml-4">Connected Users: {socketCount} </p>
         <p className="fixed right-[2px] lg:top-[18px] lg:right-[26px]">
