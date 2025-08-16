@@ -22,6 +22,31 @@ const ChatroomContent: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const containerRef = useScrollBottom(message);
 
+  useEffect(() => {
+    const handleKeyDown = (e: any) => {
+      if (e.key === 'F5' ||
+        (e.ctrlKey && e.key === 'r') ||
+        (e.metaKey && e.key === 'r')) {
+        e.preventDefault();
+        toast.warning("Refreshing will disconnect your socket connection!");
+      }
+    };
+
+    const handleBeforeUnload = (e: any) => {
+      e.preventDefault();
+      e.returnValue = ''
+      toast.warning("Refreshing will disconnect your socket connection!");
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   const handleCopy = () => {
     navigator.clipboard.writeText(String(roomId));
     setCopied(true);
@@ -99,7 +124,7 @@ const ChatroomContent: React.FC = () => {
             className={`flex ${msg.senderId == socket.id ? 'mr-[5px] justify-end' : 'ml-[5px] justify-start'}`}
           >
             <div
-              className={`my-[2px] h-fit w-fit max-w-[230px] rounded-[6px] border-1 border-black/50 bg-black/85 p-[4px] px-[10px] text-start text-[14px] font-medium break-words text-white lg:max-w-[430px] lg:text-[16px] dark:border-white/60 dark:bg-white dark:text-black`}
+              className={`my-[2px] h-fit w-fit max-w-[230px] rounded-[6px] border-1 border-black/50 bg-black/85 p-[4px] px-[10px] text-start text-[14px] font-medium break-words text-white lg:max-w-[430px] lg:text-[15px] dark:border-white/60 dark:bg-white dark:text-black`}
             >
               {msg.message}
               <p className="text-[10px] text-zinc-300/80 lg:text-[10px] dark:text-zinc-700">

@@ -110,7 +110,7 @@ export default function Home() {
             <div className="mx-auto flex flex-col gap-[4px]">
               <div className="mx-auto flex flex-col p-2 lg:p-4">
                 <input
-                  className="mx-auto h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[13px] outline-none lg:h-[40px] lg:w-[580px] lg:rounded-[4px] lg:border-1 lg:text-[16px] dark:border-white/50"
+                  className="mx-auto h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[13px] outline-none lg:h-[40px] lg:w-[580px] lg:rounded-[4px] lg:border-1 lg:text-[15px] dark:border-white/50"
                   type="text"
                   placeholder="Enter Room Id"
                   maxLength={6}
@@ -120,7 +120,7 @@ export default function Home() {
                   }
                 />
                 <input
-                  className="mx-auto mt-[8px] h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[13px] outline-none lg:mt-[10px] lg:h-[40px] lg:w-[580px] lg:rounded-[4px] lg:border-1 lg:text-[16px] dark:border-white/50"
+                  className="mx-auto mt-[8px] h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[13px] outline-none lg:mt-[10px] lg:h-[40px] lg:w-[580px] lg:rounded-[4px] lg:border-1 lg:text-[15px] dark:border-white/50"
                   type="text"
                   placeholder="Enter your name"
                   maxLength={20}
@@ -130,7 +130,7 @@ export default function Home() {
                   }
                 />
                 <button
-                  className="lg:text[14px] mt-[10px] h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-black text-[14px] font-medium text-white transition-all duration-300 hover:bg-black/85 lg:mt-[16px] lg:h-[40px] lg:w-[580px] lg:rounded-[6px] lg:text-[16px] dark:bg-white dark:text-black hover:dark:bg-white/90"
+                  className="mt-[10px] h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-black text-[14px] font-medium text-white transition-all duration-300 hover:bg-black/85 lg:mt-[16px] lg:h-[40px] lg:w-[580px] lg:rounded-[6px] lg:text-[15px] dark:bg-white dark:text-black hover:dark:bg-white/90"
                   onClick={handleRoomJoin}
                   ref={EnterRef}
                 >
@@ -141,7 +141,7 @@ export default function Home() {
                 Don&apos;t have any Room to join? Create your own Private Room
               </span>
               <button
-                className="mx-auto h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-blue-400 text-[14px] font-medium text-white transition-all duration-300 hover:bg-blue-400/90 lg:mt-[1px] lg:h-[40px] lg:w-[580px] lg:rounded-[6px] lg:text-[16px]"
+                className="mx-auto h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-blue-400 text-[14px] font-medium text-white transition-all duration-300 hover:bg-blue-400/90 lg:mt-[1px] lg:h-[40px] lg:w-[580px] lg:rounded-[6px] lg:text-[15px]"
                 onClick={createId}
               >
                 {isPending ? (
