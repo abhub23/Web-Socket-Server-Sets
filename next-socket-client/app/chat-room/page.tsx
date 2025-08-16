@@ -24,18 +24,20 @@ const ChatroomContent: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: any) => {
-      if (e.key === 'F5' ||
+      if (
+        e.key === 'F5' ||
         (e.ctrlKey && e.key === 'r') ||
-        (e.metaKey && e.key === 'r')) {
+        (e.metaKey && e.key === 'r')
+      ) {
         e.preventDefault();
-        toast.warning("Refreshing will disconnect your socket connection!");
+        toast.warning('Refreshing will disconnect your socket connection!');
       }
     };
 
     const handleBeforeUnload = (e: any) => {
       e.preventDefault();
-      e.returnValue = ''
-      toast.warning("Refreshing will disconnect your socket connection!");
+      e.returnValue = '';
+      toast.warning('Refreshing will disconnect your socket connection!');
     };
 
     document.addEventListener('keydown', handleKeyDown);
