@@ -11,6 +11,7 @@ import { CopyIcon, CheckIcon } from '@radix-ui/react-icons';
 import { ToggleTheme } from '@/components/ToggleTheme';
 import { useScrollBottom } from '@/store/useScrollBottom';
 import { useEnter } from '@/store/useEnter';
+import { cn } from '@/lib/utils';
 
 const ChatroomContent: React.FC = () => {
   const searchParams = useSearchParams();
@@ -123,10 +124,10 @@ const ChatroomContent: React.FC = () => {
         {message.map((msg, id) => (
           <div
             key={id}
-            className={`flex ${msg.senderId == socket.id ? 'mr-[5px] justify-end' : 'ml-[5px] justify-start'}`}
+            className={cn('flex', msg.senderId == socket.id ? 'mr-[5px] justify-end' : 'ml-[5px] justify-start')}
           >
             <div
-              className={`my-[2px] h-fit w-fit max-w-[230px] rounded-[6px] border-1 border-black/50 bg-black/85 p-[4px] px-[10px] text-start text-[14px] font-medium break-words text-white lg:max-w-[430px] lg:text-[15px] dark:border-white/60 dark:bg-white dark:text-black`}
+              className='my-[2px] h-fit w-fit max-w-[230px] rounded-[6px] border-1 border-black/50 bg-black/85 p-[4px] px-[10px] text-start text-[14px] font-medium break-words text-white lg:max-w-[430px] lg:text-[15px] dark:border-white/60 dark:bg-white dark:text-black'
             >
               {msg.message}
               <p className="text-[10px] text-zinc-300/80 lg:text-[10px] dark:text-zinc-700">

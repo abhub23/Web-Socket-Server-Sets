@@ -3,6 +3,7 @@ import { ThemeProvider } from 'next-themes';
 import './globals.css';
 import { Jetmono } from '@/utils/fonts';
 import { Toaster } from 'sonner';
+import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://privado.abdullahtech.dev'),
@@ -58,7 +59,7 @@ export default function RootLayout({
       style={{ colorScheme: 'light' }}
       suppressHydrationWarning
     >
-      <body className={` ${Jetmono} `}>
+      <body className={cn(Jetmono)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
           <Toaster />
