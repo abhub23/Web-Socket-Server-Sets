@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="next-socket-client/public/chat.png" alt="WebSocket Server Sets Logo" width="120" />
+  <img src="next-socket-client/public/og-image.png" alt="WebSocket Server Sets Logo" width="120" />
 </p>
 
 <h1 align="center">WebSocket Server Sets</h1>
