@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "fmt": "pnpx prettier -w ."
+    "fmt": "bunx prettier -w ."
   },
   "contributors": [
     "https://github.com/abhub23"
