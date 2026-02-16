@@ -2,9 +2,10 @@
 import { io, Socket } from 'socket.io-client';
 
 //Events Emitted by Client -> Server
-type ClienttoServerEvents = {
+type ClientToServerEvents = {
   'private-chat': (roomId: string, username: string) => void;
   'create-room': () => void;
+  'typing': (roomId: string, username: string) => void
   message: (
     roomId: string,
     chatmessage: string,
@@ -20,15 +21,17 @@ type Msgtype = {
 };
 
 //Events Emitted by Server -> Client
-type ServertoClientEvents = {
+type ServerToClientEvents = {
   'room-created': (roomId: string) => void;
   'receive-message': (data: Msgtype) => void;
-  'socket-length': (data: number) => void;
+  'user-count': (data: number) => void;
   isConnected: (value: boolean) => void;
+  isTyping: (typing: boolean, username: string) => void;
 };
 
-const socket: Socket<ServertoClientEvents, ClienttoServerEvents> = io(
-  process.env.NEXT_PUBLIC_BACKEND_SOCKET_URL || 'http://0.0.0.0:6006',
+const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
+  // process.env.NEXT_PUBLIC_BACKEND_SOCKET_URL || 
+   'http://localhost:6006',
 );
 
 export default socket;
