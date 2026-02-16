@@ -1,7 +1,58 @@
-# This Repo is me trying to learn Web Sockets in Languages i learn 
+<p align="center">
+  <img src="next-socket-client/public/chat.png" alt="WebSocket Server Sets Logo" width="120" />
+</p>
 
-- As ThePrimeagen says that whenever i learn new things like a language i try to make a Web socket server to grasp the language for better understanding and i took that seriously
+<h1 align="center">WebSocket Server Sets</h1>
 
--We'll also learn some basics of Websockets like some of its functiona and properties with the go...
+<p align="center">
+  A collection of WebSocket server implementations in multiple languages — built for learning and mastering WebSockets.
+</p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Next.js-15.2.8-000000?logo=next.js&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Socket.IO-4.8.3-010101?logo=socket.io&logoColor=white" alt="Socket.IO" />
+</p>
 
+---
+
+## 📚 Overview
+
+> _"Whenever I learn a new language, I build a WebSocket server to grasp it better."_ — Following ThePrimeagen's advice
+
+This repository contains WebSocket server implementations using Socket.IO in different programming languages. Each implementation demonstrates real-time bidirectional communication patterns with rooms, broadcasting, and event handling.
+
+## 🛠️ Implementations
+
+| Language | Path | Description |
+|----------|------|-------------|
+| **TypeScript** | [`Typescript/`](./Typescript) | Node.js WebSocket server with Socket.IO 4.8.3 |
+| **Client** | [`next-socket-client/`](./next-socket-client) | Next.js 15.2.8 frontend with socket.io-client |
+
+## 🚀 Quick Start
+
+Each implementation has its own README with setup instructions:
+
+- [TypeScript Implementation](./Typescript/Readme.md)
+- [Next.js Client](./next-socket-client/README.md)
+
+## 🌐 What You'll Learn
+
+- Socket.IO connection lifecycle and rooms
+- Real-time event emission and broadcasting
+- Namespace and room management
+- Error handling and reconnection strategies
+- Client-server bidirectional communication
+
+## 📂 Repository Structure
+
+```
+.
+├── Typescript/              # TypeScript/Node.js server (Socket.IO)
+├── next-socket-client/      # Next.js 15.2.8 client app
+└── README.md               # This file
+```
+
+## 🤝 Contributing
+
+Feel free to add implementations in other languages or improve existing ones.

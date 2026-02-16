@@ -5,8 +5,10 @@ import { Jetmono } from '@/utils/fonts';
 import { Toaster } from 'sonner';
 import { cn } from '@/lib/utils';
 
+const FRONTEND_URL = 'https://privado.abdullahtech.dev';
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://privado.abdullahtech.dev'),
+  metadataBase: new URL(FRONTEND_URL),
   title: 'Privado - A Real Time Chat Application',
   description:
     'Privado, a private room chat application made with Typescript and web-sockets leveraging Socket.IO',
@@ -33,14 +35,38 @@ export const metadata: Metadata = {
     name: 'Abdullah Mukri',
   },
   publisher: 'Abdullah Mukri',
+
+  openGraph: {
+    title: 'Privado - A Real Time Chat Application',
+    description:
+      'Privado, a private room chat application made with Typescript and web-sockets leveraging Socket.IO',
+    url: FRONTEND_URL,
+    siteName: 'Privado',
+    images: [
+      {
+        url: `${FRONTEND_URL}/og-image.png`,
+        width: 1200,
+        height: 630,
+      },
+    ],
+    type: 'website',
+  },
+
   twitter: {
-    site: 'https://x.com/abdullah_twt23',
-    siteId: 'abdullah_twt23',
+    site: FRONTEND_URL,
+    creator: '@abdullah_twt23',
+    title: 'Privado - A Real Time Chat Application',
+    description:
+      'Privado, a private room chat application made with Typescript and web-sockets leveraging Socket.IO',
+    images: {
+      url: `${FRONTEND_URL}/og-image.png`,
+      type: 'image/png',
+    },
   },
 
   appLinks: {
     web: {
-      url: new URL('https://privado.abdullahtech.dev'),
+      url: new URL(FRONTEND_URL),
     },
   },
 
