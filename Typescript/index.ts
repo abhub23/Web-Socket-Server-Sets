@@ -1,12 +1,13 @@
 import express from 'express';
 import http from 'http'
 import { Server, Socket } from 'socket.io';
-import { createRoomID } from './createRoomID';
+import { createRoomID } from './src/utils/createRoomID';
+import { PORT, HOUR_IN_MS, TYPING_TIMEOUT_MS } from './src/utils/constants';
+import { type RoomData } from './src/types';
 
 const app = express();
-const Port = 6006
-const httpserver = http.createServer(app)
-const io = new Server(httpserver, {
+const httpServer = http.createServer(app)
+const io = new Server(httpServer, {
     cors: {
         origin: '*'
     }
@@ -14,20 +15,8 @@ const io = new Server(httpserver, {
 app.get('/', (req, res) => {
     res.json({message: 'Server is alive'})
 })
-type Msgtype = {
-    senderId: string;
-    message: string;
-    time: string;
-};
 
-type Roomdata = {
-    users: Set<string>;
-    messages: Msgtype[]
-    lastActive: number;
-}
-
-const map = new Map<string, Roomdata>()
-const hour = 3600000
+const map = new Map<string, RoomData>()
 
 io.on('connection', (socket: Socket) => {
     console.log(`Client connected with socket ID: ${socket.id}`)
@@ -46,22 +35,34 @@ io.on('connection', (socket: Socket) => {
     })
 
 
+    socket.on('typing' , (roomId, username) => {
+        if (socket.data.typingTimeout) {
+            clearTimeout(socket.data.typingTimeout)
+        }
+
+        io.to(roomId).emit('isTyping', true, username)
+
+        socket.data.typingTimeout = setTimeout(() => {
+            io.to(roomId).emit('isTyping', false, username)
+        }, TYPING_TIMEOUT_MS)
+    })
+
+
     socket.on('private-chat', async (roomId: string, username: string) => {
 
-        let RoomExists: boolean;
-        if (map.has(roomId)) {
-            RoomExists = true
+        let roomExists = map.has(roomId);
+
+        if(roomExists){
             socket.join(roomId)
-        } else {
-            RoomExists = false
         }
-        socket.emit('isConnected', RoomExists)
+        
+        socket.emit('isConnected', roomExists)
 
 
         const roomSockets = await io.in(roomId).fetchSockets();
         
         setTimeout(() => {
-            io.to(roomId).emit('socket-length', roomSockets.length);
+            io.to(roomId).emit('user-count', roomSockets.length);
         }, 1000);
 
     })
@@ -96,12 +97,12 @@ io.on('connection', (socket: Socket) => {
 setInterval(() => {
     const now = Date.now()
     for (let [key, value] of map.entries()) {
-        if (value.users.size == 0 || now - value.lastActive > hour) {
+        if (value.users.size == 0 || now - value.lastActive > HOUR_IN_MS) {
             map.delete(key)
         }
     }
-}, hour)
+}, HOUR_IN_MS)
 
-httpserver.listen(Port, '0.0.0.0', () => {
-    console.log(`SocketIO Server Listening on Port: ${Port}`)
+httpServer.listen(PORT, '0.0.0.0', () => {
+    console.log(`SocketIO Server ggg Listening on Port: ${PORT}`)
 })
