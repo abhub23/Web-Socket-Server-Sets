@@ -66,12 +66,14 @@ io.on('connection', (socket: Socket) => {
 
     })
 
-    socket.on('message', async (roomId: string, chatmessage: string, time: string, username: string) => {
+    socket.on('message', (roomId: string, chatmessage: string, time: string, username: string) => {
 
-        const room: any = map.get(roomId)
+        const room = map.get(roomId)
 
-        await room.users.add(username)
-        await room.messages.push({senderId: socket.id,message: chatmessage, time: time})
+        if(!room) return;
+
+        room.users.add(username)
+        room.messages.push({senderId: socket.id,message: chatmessage, time: time})
         room.lastActive = Date.now();
 
        const lastMsg = room.messages[room.messages.length -1]
