@@ -55,10 +55,12 @@ io.on('connection', (socket) => {
             io.to(roomId).emit('socket-length', roomSockets.length);
         }, 1000);
     }));
-    socket.on('message', (roomId, chatmessage, time, username) => __awaiter(void 0, void 0, void 0, function* () {
+    socket.on('message', (roomId, chatmessage, time, username) => {
         const room = map.get(roomId);
-        yield room.users.add(username);
-        yield room.messages.push({ senderId: socket.id, message: chatmessage, time: time });
+        if (!room)
+            return;
+        room.users.add(username);
+        room.messages.push({ senderId: socket.id, message: chatmessage, time: time });
         room.lastActive = Date.now();
         const lastMsg = room.messages[room.messages.length - 1];
         io.to(roomId).emit('receive-message', ({
@@ -66,7 +68,7 @@ io.on('connection', (socket) => {
             message: lastMsg.message,
             time: lastMsg.time
         }));
-    }));
+    });
     socket.on('disconnect', () => {
         console.log(`Client ${socket.id} Disconnected!`);
     });
