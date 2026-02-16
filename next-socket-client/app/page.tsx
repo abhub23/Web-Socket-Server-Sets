@@ -98,14 +98,14 @@ export default function Home() {
           <span className="mt-[150px] flex items-center justify-center lg:mt-[120px]">
             <AnimatedText text={'Welcome to Privado'} />
           </span>
-          <div className='fixed top-[20px] right-[20px]'>
+          <div className="fixed top-[20px] right-[20px]">
             <ToggleTheme />
           </div>
           <motion.div
             initial={{ opacity: 0, y: 20, filter: 'blur(16px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.5, ease: easeInOut }}
-            className='mx-auto mt-[10px] flex h-[330px] flex-col lg:mt-[1px] lg:h-[320px] lg:w-[1000px]'
+            className="mx-auto mt-[10px] flex h-[330px] flex-col lg:mt-[1px] lg:h-[320px] lg:w-[1000px]"
           >
             <div className="mx-auto flex flex-col gap-[4px]">
               <div className="mx-auto flex flex-col p-2 lg:p-4">

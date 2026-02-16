@@ -7,11 +7,12 @@ import { toast } from 'sonner';
 import socket from '@/utils/socket';
 import type { Msgtype } from '@/store/store';
 import Button from '@/components/Button';
-import { CopyIcon, CheckIcon } from '@radix-ui/react-icons';
+import { CopyIcon, CheckIcon, ValueIcon } from '@radix-ui/react-icons';
 import { ToggleTheme } from '@/components/ToggleTheme';
 import { useScrollBottom } from '@/store/useScrollBottom';
 import { useEnter } from '@/store/useEnter';
 import { cn } from '@/lib/utils';
+import { ToyBrick } from 'lucide-react';
 
 const ChatroomContent: React.FC = () => {
   const searchParams = useSearchParams();
@@ -21,7 +22,26 @@ const ChatroomContent: React.FC = () => {
   const { message, addMessage } = useMessage();
   const [socketCount, setSocketCount] = useState<number>(0);
   const [copied, setCopied] = useState(false);
+  const [isTyping, setIsTyping] = useState<boolean>(false)
+  const [whoTyping, setWhoTyping] = useState<string>('')
   const containerRef = useScrollBottom(message);
+
+  useEffect(() => {
+    const handleTyping = (typing: boolean, username: string) => {
+      if(typing){
+        setIsTyping(true)
+        setWhoTyping(username)          
+      }else{
+        setIsTyping(false)
+      }
+    }
+
+    socket.on('isTyping', handleTyping)
+
+    return () => {
+      socket.off('isTyping', handleTyping)
+    }
+  }, [])
 
   useEffect(() => {
     const handleKeyDown = (e: any) => {
@@ -72,13 +92,13 @@ const ChatroomContent: React.FC = () => {
   useEffect(() => {
     socket.on('receive-message', receiveMessage);
 
-    socket.on('socket-length', (listeners: number) => {
+    socket.on('user-count', (listeners: number) => {
       setSocketCount(listeners);
     });
 
     return () => {
       socket.off('receive-message', receiveMessage);
-      socket.off('socket-length');
+      socket.off('user-count');
     };
   }, []);
 
@@ -116,7 +136,6 @@ const ChatroomContent: React.FC = () => {
           <ToggleTheme />
         </p>
       </div>
-
       <div
         className="no-scrollbar mx-auto flex h-[580px] w-[360px] flex-col gap-1 border-1 border-black/30 p-1 outline-none lg:mt-[14px] lg:h-[520px] lg:w-[680px] lg:rounded-[6px] dark:border-b-white/20 lg:dark:border-white/20"
         ref={containerRef}
@@ -126,7 +145,7 @@ const ChatroomContent: React.FC = () => {
             key={id}
             className={cn('flex', msg.senderId == socket.id ? 'mr-[5px] justify-end' : 'ml-[5px] justify-start')}
           >
-            <div
+              <div
               className='my-[2px] h-fit w-fit max-w-[230px] rounded-[6px] border-1 border-black/50 bg-black/85 p-[4px] px-[10px] text-start text-[14px] font-medium break-words text-white lg:max-w-[430px] lg:text-[15px] dark:border-white/60 dark:bg-white dark:text-black'
             >
               {msg.message}
@@ -136,17 +155,27 @@ const ChatroomContent: React.FC = () => {
             </div>
           </div>
         ))}
+        {isTyping && username !== whoTyping && (
+          <div className={cn('flex', 'ml-[5px] justify-start')}>
+            <div className="my-[2px] h-fit w-fit rounded-[6px] border-1 border-black/30 bg-black/50 p-[4px] px-[10px] text-[12px] italic text-white/70 dark:border-white/30 dark:bg-white/50 dark:text-black/70">
+              {whoTyping} is typing...
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="fixed bottom-[10px] left-1/2 h-[40px] w-full -translate-x-1/2 transform lg:h-[60px] lg:w-[860px]">
-        <div className="mx-auto flex flex-row justify-around lg:justify-center">
+        <div className="mx-auto flex flex-row items-center justify-center gap-2 lg:justify-center">
           <input
             className="h-[40px] w-[260px] rounded-[6px] border-1 border-black/30 p-[8px] outline-none lg:mr-3 lg:h-[42px] lg:w-[570px] lg:p-[12px] lg:text-[16px] dark:border-white/20"
             type="text"
             placeholder="Message"
             value={chatmessage}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setChatMessage(e.target.value)
+              socket.emit('typing', roomId, username)
+            }
+              
             }
           />
           <Button onClick={handleMessage} ref={SendRef} />
