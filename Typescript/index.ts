@@ -1,7 +1,7 @@
 import { Server } from 'socket.io';
 import { httpServer } from './src/server';
 import { createRoomID } from './src/utils/createRoomID';
-import { HOUR_IN_MS, TYPING_TIMEOUT_MS } from './src/utils/constants';
+import { PORT, HOUR_IN_MS, TYPING_TIMEOUT_MS } from './src/utils/constants';
 import { type RoomData } from './src/types';
 
 const io = new Server(httpServer, {
@@ -95,3 +95,7 @@ setInterval(() => {
         }
     }
 }, HOUR_IN_MS)
+
+httpServer.listen(PORT, '0.0.0.0', () => {
+    console.log(`SocketIO Server Listening on Port: ${PORT}`);
+});
