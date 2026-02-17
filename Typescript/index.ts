@@ -1,9 +1,20 @@
+import express from "express";
+import http from 'http';
 import { Server } from 'socket.io';
-import { httpServer } from './src/server';
 import { createRoomID } from './src/utils/createRoomID';
 import { PORT, HOUR_IN_MS, TYPING_TIMEOUT_MS } from './src/utils/constants';
 import { type RoomData } from './src/types';
 
+// Create HTTP server with Express
+const app = express();
+const httpServer = http.createServer(app);
+
+// Health check endpoint
+app.get('/', (_, res) => {
+    res.status(200).json({ message: "Server is Healthy" });
+});
+
+// Create Socket.IO server
 const io = new Server(httpServer, {
     cors: {
         origin: '*'
@@ -13,7 +24,15 @@ const io = new Server(httpServer, {
 const map = new Map<string, RoomData>()
 
 io.on('connection', (socket) => {
-    console.log(`Client connected with socket ID: ${socket.id}`)
+    console.log(`[DEBUG] Client connected with socket ID: ${socket.id}, transport: ${socket.conn.transport.name}`)
+    
+    socket.conn.on('upgrade', (transport) => {
+        console.log(`[DEBUG] Socket ${socket.id} upgraded to: ${transport.name}`);
+    });
+    
+    socket.conn.on('upgradeError', (err) => {
+        console.log(`[DEBUG] Socket ${socket.id} upgrade error:`, err);
+    });
 
 
     socket.on('create-room', () => {
@@ -96,6 +115,31 @@ setInterval(() => {
     }
 }, HOUR_IN_MS)
 
+console.log('[DEBUG] Socket.IO attached:', io.engine ? 'YES' : 'NO');
+console.log('[DEBUG] Starting server on PORT:', PORT);
+
+httpServer.on('error', (err) => {
+    console.error('[DEBUG] HTTP Server Error:', err);
+});
+
 httpServer.listen(PORT, '0.0.0.0', () => {
-    console.log(`SocketIO Server Listening on Port: ${PORT}`);
+    console.log(`[DEBUG] SocketIO Server Listening on Port: ${PORT}`);
+    console.log('[DEBUG] Server address:', httpServer.address());
+});
+
+io.engine.on('connection_error', (err: { req: any; code: any; message: any; context: any; }) => {
+    console.log('[DEBUG] Connection Error:', err);
+});
+
+httpServer.on('upgrade', (request, socket, head) => {
+    console.log('[DEBUG] HTTP Upgrade request for:', request.url);
+    console.log('[DEBUG] Upgrade headers:', request.headers.upgrade);
+});
+
+io.engine.on('initial_headers', (headers, req) => {
+    console.log('[DEBUG] Socket.IO initial headers, transport attempt');
+});
+
+io.engine.on('headers', (headers, req) => {
+    console.log('[DEBUG] Socket.IO headers sent');
 });
