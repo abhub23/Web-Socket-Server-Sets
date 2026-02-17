@@ -1,24 +1,18 @@
-import express from 'express';
-import http from 'http'
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
+import { httpServer } from './src/server';
 import { createRoomID } from './src/utils/createRoomID';
-import { PORT, HOUR_IN_MS, TYPING_TIMEOUT_MS } from './src/utils/constants';
+import { HOUR_IN_MS, TYPING_TIMEOUT_MS } from './src/utils/constants';
 import { type RoomData } from './src/types';
 
-const app = express();
-const httpServer = http.createServer(app)
 const io = new Server(httpServer, {
     cors: {
         origin: '*'
     }
 })
-app.get('/', (req, res) => {
-    res.json({message: 'Server is alive'})
-})
 
 const map = new Map<string, RoomData>()
 
-io.on('connection', (socket: Socket) => {
+io.on('connection', (socket) => {
     console.log(`Client connected with socket ID: ${socket.id}`)
 
 
@@ -58,7 +52,6 @@ io.on('connection', (socket: Socket) => {
         
         socket.emit('isConnected', roomExists)
 
-
         const roomSockets = await io.in(roomId).fetchSockets();
         
         setTimeout(() => {
@@ -74,16 +67,16 @@ io.on('connection', (socket: Socket) => {
         if(!room) return;
 
         room.users.add(username)
-        room.messages.push({senderId: socket.id,message: chatmessage, time: time})
+        room.messages.push({senderId: socket.id, message: chatmessage, time})
         room.lastActive = Date.now();
 
        const lastMsg = room.messages[room.messages.length -1]
 
-        io.to(roomId).emit('receive-message', ({
+        io.to(roomId).emit('receive-message', {
             senderId: lastMsg.senderId,
             message: lastMsg.message,
             time: lastMsg.time
-        }))
+        })
 
     })
 
@@ -97,12 +90,8 @@ io.on('connection', (socket: Socket) => {
 setInterval(() => {
     const now = Date.now()
     for (let [key, value] of map.entries()) {
-        if (value.users.size == 0 || now - value.lastActive > HOUR_IN_MS) {
+        if (value.users.size === 0 || now - value.lastActive > HOUR_IN_MS) {
             map.delete(key)
         }
     }
 }, HOUR_IN_MS)
-
-httpServer.listen(PORT, '0.0.0.0', () => {
-    console.log(`SocketIO Server ggg Listening on Port: ${PORT}`)
-})
