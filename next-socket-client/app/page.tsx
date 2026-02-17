@@ -26,7 +26,10 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
+    console.log('[FRONTEND] Setting up room-created listener');
+    
     socket.on('room-created', (socketGeneratedRoomId) => {
+      console.log('[FRONTEND] room-created event received:', socketGeneratedRoomId);
       setRoomId(socketGeneratedRoomId);
       setGenerate(true);
       setPending(false);
@@ -34,10 +37,11 @@ export default function Home() {
     });
 
     return () => {
+      console.log('[FRONTEND] Cleaning up room-created listener');
       socket.off('room-created');
       socket.off('isConnected');
     };
-  }, [roomId]);
+  }, []);
 
   const createId = () => {
     setPending(true);
