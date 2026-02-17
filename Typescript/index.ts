@@ -36,15 +36,24 @@ io.on('connection', (socket) => {
 
 
     socket.on('create-room', () => {
-        const roomId = createRoomID()
-
-        map.set(roomId, {
-            users: new Set<string>(),
-            messages: [],
-            lastActive: Date.now()
-        })
-
-        socket.emit('room-created', roomId)
+        console.log('[DEBUG] create-room event received from socket:', socket.id);
+        try {
+            const roomId = createRoomID();
+            console.log('[DEBUG] Generated roomId:', roomId);
+            
+            map.set(roomId, {
+                users: new Set<string>(),
+                messages: [],
+                lastActive: Date.now()
+            });
+            console.log('[DEBUG] Room stored in map. Map size:', map.size);
+            
+            socket.emit('room-created', roomId);
+            console.log('[DEBUG] room-created event emitted to socket:', socket.id);
+        } catch (err) {
+            console.error('[DEBUG] Error in create-room:', err);
+            socket.emit('room-error', 'Failed to create room');
+        }
     })
 
 
