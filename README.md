@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="next-socket-client/public/og-image.png" alt="Privado Logo" width="820" />
+  <img src="next-socket-client/public/og-image.png" alt="Privado Logo" width="780" />
 </p>
 
 <h1 align="center">Privado</h1>
@@ -50,6 +50,7 @@ Each implementation has its own README with setup instructions:
 .
 ├── Typescript/              # TypeScript/Node.js server (Socket.IO)
 ├── next-socket-client/      # Next.js 15.2.8 client app
+├── ARCHITECTURE.md         # System architecture and design documentation
 └── README.md               # This file
 ```
 
