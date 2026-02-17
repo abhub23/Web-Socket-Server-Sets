@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="next-socket-client/public/og-image.png" alt="Privado Logo" width="600" />
+  <img src="next-socket-client/public/og-image.png" alt="Privado Logo" width="820" />
 </p>
 
 <h1 align="center">Privado</h1>
