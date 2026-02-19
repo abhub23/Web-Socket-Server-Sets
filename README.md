@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="next-socket-client/public/chat.png" alt="WebSocket Server Sets Logo" width="120" />
+  <img src="next-socket-client/public/og-image.png" alt="Privado Logo" width="780" />
 </p>
 
-<h1 align="center">WebSocket Server Sets</h1>
+<h1 align="center">Privado</h1>
 
 <p align="center">
-  A collection of WebSocket server implementations in multiple languages — built for learning and mastering WebSockets.
+  A secure and private communication platform built with WebSocket technology.
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 
 > _"Whenever I learn a new language, I build a WebSocket server to grasp it better."_ — Following ThePrimeagen's advice
 
-This repository contains WebSocket server implementations using Socket.IO in different programming languages. Each implementation demonstrates real-time bidirectional communication patterns with rooms, broadcasting, and event handling.
+This repository contains the Privado platform - a secure real-time communication system using Socket.IO. Each implementation demonstrates private messaging, secure rooms, and encrypted event handling.
 
 ## 🛠️ Implementations
 
@@ -50,6 +50,7 @@ Each implementation has its own README with setup instructions:
 .
 ├── Typescript/              # TypeScript/Node.js server (Socket.IO)
 ├── next-socket-client/      # Next.js 15.2.8 client app
+├── ARCHITECTURE.md         # System architecture and design documentation
 └── README.md               # This file
 ```
 

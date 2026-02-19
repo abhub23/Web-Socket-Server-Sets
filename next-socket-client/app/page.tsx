@@ -5,7 +5,7 @@ import { CopyIcon, CheckIcon } from '@radix-ui/react-icons';
 import { toast } from 'sonner';
 import { useGenerate, usePending, useRoomId, useUsername } from '@/store/store';
 import { useRouter } from 'next/navigation';
-import socket from '@/utils/socket';
+import { getSocket } from '@/utils/socket';
 import Footer from '@/components/Footer';
 import { SafeRender, ToggleTheme } from '@/components/ToggleTheme';
 import { useEnter } from '@/store/useEnter';
@@ -26,42 +26,52 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    socket.on('room-created', (socketGeneratedRoomId) => {
+    const socket = getSocket();
+
+    const handleRoomCreated = (socketGeneratedRoomId: string) => {
       setRoomId(socketGeneratedRoomId);
       setGenerate(true);
       setPending(false);
       toast.success(`New Room created`);
-    });
+    };
+
+    socket.on('room-created', handleRoomCreated);
 
     return () => {
-      socket.off('room-created');
-      socket.off('isConnected');
+      socket.off('room-created', handleRoomCreated);
     };
-  }, [roomId]);
+  }, []);
 
   const createId = () => {
+    const socket = getSocket();
     setPending(true);
     setCopied(false);
     socket.emit('create-room');
   };
 
   const handleRoomJoin = () => {
+    const socket = getSocket();
+    
     if (!roomId) {
       toast.error('Enter Room Id');
       return;
     } else if (username.trim() == '') {
       toast.error('Enter your name');
       return;
-    } else {
-      socket.emit('private-chat', roomId, username);
-      socket.on('isConnected', (value: boolean) => {
-        if (value) {
-          router.push(`/chat-room?username=${username}&roomId=${roomId}`);
-        } else {
-          toast.error('This Room do not exist');
-        }
-      });
     }
+
+    socket.emit('private-chat', roomId, username);
+
+    const handleIsConnected = (value: boolean) => {
+      if (value) {
+        router.push(`/chat-room?username=${username}&roomId=${roomId}`);
+      } else {
+        toast.error('This Room do not exist');
+      }
+      socket.off('isConnected', handleIsConnected);
+    };
+
+    socket.on('isConnected', handleIsConnected);
   };
 
   const EnterRef = useEnter(handleRoomJoin);
@@ -98,14 +108,14 @@ export default function Home() {
           <span className="mt-[150px] flex items-center justify-center lg:mt-[120px]">
             <AnimatedText text={'Welcome to Privado'} />
           </span>
-          <div className='fixed top-[20px] right-[20px]'>
+          <div className="fixed top-[20px] right-[20px]">
             <ToggleTheme />
           </div>
           <motion.div
             initial={{ opacity: 0, y: 20, filter: 'blur(16px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.5, ease: easeInOut }}
-            className='mx-auto mt-[10px] flex h-[330px] flex-col lg:mt-[1px] lg:h-[320px] lg:w-[1000px]'
+            className="mx-auto mt-[10px] flex h-[330px] flex-col lg:mt-[1px] lg:h-[320px] lg:w-[1000px]"
           >
             <div className="mx-auto flex flex-col gap-[4px]">
               <div className="mx-auto flex flex-col p-2 lg:p-4">
