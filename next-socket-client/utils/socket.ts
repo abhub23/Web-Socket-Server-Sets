@@ -30,8 +30,7 @@ type ServerToClientEvents = {
 };
 
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io(
-  // process.env.NEXT_PUBLIC_BACKEND_SOCKET_URL || 
-   'http://localhost:6006',
+  process.env.NEXT_PUBLIC_BACKEND_SOCKET_URL || 'http://localhost:6006',
 );
 
 export default socket;
