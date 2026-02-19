@@ -4,15 +4,14 @@ import { useMessage } from '@/store/store';
 import { useSearchParams } from 'next/navigation';
 import React, { Suspense, useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import socket from '@/utils/socket';
+import { getSocket } from '@/utils/socket';
 import type { Msgtype } from '@/store/store';
 import Button from '@/components/Button';
-import { CopyIcon, CheckIcon, ValueIcon } from '@radix-ui/react-icons';
+import { CopyIcon, CheckIcon } from '@radix-ui/react-icons';
 import { ToggleTheme } from '@/components/ToggleTheme';
 import { useScrollBottom } from '@/store/useScrollBottom';
 import { useEnter } from '@/store/useEnter';
 import { cn } from '@/lib/utils';
-import { ToyBrick } from 'lucide-react';
 
 const ChatroomContent: React.FC = () => {
   const searchParams = useSearchParams();
@@ -22,29 +21,33 @@ const ChatroomContent: React.FC = () => {
   const { message, addMessage } = useMessage();
   const [socketCount, setSocketCount] = useState<number>(0);
   const [copied, setCopied] = useState(false);
-  const [isTyping, setIsTyping] = useState<boolean>(false)
-  const [whoTyping, setWhoTyping] = useState<string>('')
+  const [isTyping, setIsTyping] = useState<boolean>(false);
+  const [whoTyping, setWhoTyping] = useState<string>('');
+  const [socketId, setSocketId] = useState<string>('');
   const containerRef = useScrollBottom(message);
 
   useEffect(() => {
-    const handleTyping = (typing: boolean, username: string) => {
-      if(typing){
-        setIsTyping(true)
-        setWhoTyping(username)          
-      }else{
-        setIsTyping(false)
-      }
-    }
+    const socket = getSocket();
+    setSocketId(socket.id || '');
 
-    socket.on('isTyping', handleTyping)
+    const handleTyping = (typing: boolean, username: string) => {
+      if (typing) {
+        setIsTyping(true);
+        setWhoTyping(username);
+      } else {
+        setIsTyping(false);
+      }
+    };
+
+    socket.on('isTyping', handleTyping);
 
     return () => {
-      socket.off('isTyping', handleTyping)
-    }
-  }, [])
+      socket.off('isTyping', handleTyping);
+    };
+  }, []);
 
   useEffect(() => {
-    const handleKeyDown = (e: any) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (
         e.key === 'F5' ||
         (e.ctrlKey && e.key === 'r') ||
@@ -55,10 +58,9 @@ const ChatroomContent: React.FC = () => {
       }
     };
 
-    const handleBeforeUnload = (e: any) => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = '';
-      toast.warning('Refreshing will disconnect your socket connection!');
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -88,8 +90,9 @@ const ChatroomContent: React.FC = () => {
     addMessage({ senderId, message, time });
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+    const socket = getSocket();
+
     socket.on('receive-message', receiveMessage);
 
     socket.on('user-count', (listeners: number) => {
@@ -103,6 +106,8 @@ const ChatroomContent: React.FC = () => {
   }, []);
 
   const handleMessage = () => {
+    const socket = getSocket();
+    
     if (chatmessage == '') {
       toast.error(`Empty message cannot be send`);
       return;
@@ -114,6 +119,12 @@ const ChatroomContent: React.FC = () => {
   };
 
   const SendRef = useEnter(handleMessage);
+
+  const handleTypingEmit = () => {
+    const socket = getSocket();
+    socket.emit('typing', roomId, username);
+  };
+
   return (
     <>
       <div className="mx-auto flex items-center justify-start bg-[#575858]/20 text-[11px] text-black lg:mt-[16px] lg:h-[50px] lg:w-[680px] lg:justify-around lg:rounded-[6px] lg:text-[16px] dark:bg-[#575858]/20 dark:text-white/60">
@@ -143,11 +154,12 @@ const ChatroomContent: React.FC = () => {
         {message.map((msg, id) => (
           <div
             key={id}
-            className={cn('flex', msg.senderId == socket.id ? 'mr-[5px] justify-end' : 'ml-[5px] justify-start')}
+            className={cn(
+              'flex',
+              msg.senderId == socketId ? 'mr-[5px] justify-end' : 'ml-[5px] justify-start'
+            )}
           >
-              <div
-              className='my-[2px] h-fit w-fit max-w-[230px] rounded-[6px] border-1 border-black/50 bg-black/85 p-[4px] px-[10px] text-start text-[14px] font-medium break-words text-white lg:max-w-[430px] lg:text-[15px] dark:border-white/60 dark:bg-white dark:text-black'
-            >
+            <div className="my-[2px] h-fit w-fit max-w-[230px] rounded-[6px] border-1 border-black/50 bg-black/85 p-[4px] px-[10px] text-start text-[14px] font-medium break-words text-white lg:max-w-[430px] lg:text-[15px] dark:border-white/60 dark:bg-white dark:text-black">
               {msg.message}
               <p className="text-[10px] text-zinc-300/80 lg:text-[10px] dark:text-zinc-700">
                 {msg.time}
@@ -172,11 +184,9 @@ const ChatroomContent: React.FC = () => {
             placeholder="Message"
             value={chatmessage}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setChatMessage(e.target.value)
-              socket.emit('typing', roomId, username)
-            }
-              
-            }
+              setChatMessage(e.target.value);
+              handleTypingEmit();
+            }}
           />
           <Button onClick={handleMessage} ref={SendRef} />
         </div>
