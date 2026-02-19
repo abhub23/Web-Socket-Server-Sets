@@ -1,0 +1,76 @@
+@import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-y: auto;
+  }
+}
+
+@layer utilities {
+  .grainy {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.4'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  .grainy-subtle {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.2'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  .grainy-heavy {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.6'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+}
+
+/*
+  ========================================
+  GRAINY TEXTURE UTILITIES
+  ========================================
+  
+  Usage: Add "grainy", "grainy-subtle", or "grainy-heavy" class to any element
+  Example: <div className="absolute inset-0 grainy" />
+  
+  CUSTOMIZATION GUIDE:
+  
+  1. OPACITY VALUES (in the SVG):
+     - opacity='0.1' = Barely visible grain
+     - opacity='0.2' = Subtle grain (grainy-subtle)
+     - opacity='0.4' = Normal grain (grainy)
+     - opacity='0.6' = Heavy grain (grainy-heavy)
+     - opacity='0.8' = Very prominent grain
+  
+  2. baseFrequency (grain size):
+     - '0.3' = Large, chunky grain
+     - '0.6' = Medium-large grain
+     - '0.9' = Medium grain (default)
+     - '1.2' = Fine grain
+     - '1.5' = Very fine, tight grain
+  
+  3. numOctaves (grain complexity):
+     - '1' = Simple, uniform grain
+     - '2' = Basic detail
+     - '4' = Detailed grain (default)
+     - '6' = Complex grain
+     - '8' = Very complex, organic grain
+  
+  4. background-size (pattern tile size):
+     - '100px' = Smaller tiles, more repetition
+     - '200px' = Balanced (default)
+     - '300px' = Larger tiles
+     - '400px' = Large tiles, less repetition
+  
+  QUICK RECIPES:
+  - Film grain: baseFrequency='0.8', numOctaves='3', opacity='0.3'
+  - Paper texture: baseFrequency='1.2', numOctaves='2', opacity='0.5'
+  - Vintage look: baseFrequency='0.5', numOctaves='6', opacity='0.4'
+  - Canvas texture: baseFrequency='1.0', numOctaves='5', opacity='0.35'
+  
+  NOTE: To modify values, edit the URL-encoded SVG in each class below
+  */

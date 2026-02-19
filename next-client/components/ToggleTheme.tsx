@@ -1,0 +1,42 @@
+import { useState, useEffect } from 'react';
+import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
+import { useTheme } from 'next-themes';
+
+export const ToggleTheme: React.FC = () => {
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(theme == 'light' ? 'dark' : 'light');
+  };
+
+  return (
+    <button
+      className="flex h-[36px] w-[36px] cursor-pointer items-center justify-center rounded-[12px] hover:bg-zinc-100 lg:h-[36px] lg:w-[36px] dark:text-white dark:hover:bg-zinc-800"
+      onClick={toggleTheme}
+    >
+      <SafeRender>
+        {theme == 'light' ? (
+          <MoonIcon className="h-[18px] w-[18px]" />
+        ) : (
+          <SunIcon className="h-[18px] w-[18px]" />
+        )}
+      </SafeRender>
+    </button>
+  );
+};
+
+type Child = {
+  children: React.ReactNode;
+};
+
+export const SafeRender: React.FC<Child> = ({ children }) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null; // or return a placeholder/spinner
+
+  return <>{children}</>;
+};
