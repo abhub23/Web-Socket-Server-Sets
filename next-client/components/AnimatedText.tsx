@@ -5,30 +5,33 @@ import { FC, useEffect } from 'react';
 type AnimateType = {
   text: string;
 };
+
+const runAnimation = (
+  animate: (selector: string, keyframes: object, options: object) => void,
+) => {
+  animate(
+    'span',
+    {
+      opacity: 1,
+      filter: 'blur(0px)',
+      y: 0,
+    },
+    {
+      duration: 0.5,
+      delay: stagger(0.1),
+      ease: easeInOut,
+    },
+  );
+};
+
 const AnimatedText: FC<AnimateType> = ({ text }) => {
   const [scope, animate] = useAnimate();
 
-  const Animatetext = () => {
-    animate(
-      'span',
-      {
-        opacity: 1,
-        filter: 'blur(0px)',
-        y: 0,
-      },
-      {
-        duration: 0.5,
-        delay: stagger(0.1),
-        ease: easeInOut,
-      },
-    );
-  };
-
   useEffect(() => {
     requestAnimationFrame(() => {
-      Animatetext();
+      runAnimation(animate);
     });
-  }, []);
+  }, [animate]);
 
   return (
     <h1
