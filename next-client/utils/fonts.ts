@@ -5,4 +5,4 @@ const JetMono_font = JetBrains_Mono({
   subsets: ['latin'],
 });
 
-export const jetmono = JetMono_font.className;
+export const Jetmono = JetMono_font.className;
