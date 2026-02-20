@@ -115,12 +115,12 @@ export default function Home() {
             initial={{ opacity: 0, y: 20, filter: 'blur(16px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ duration: 0.5, ease: easeInOut }}
-            className="mx-auto mt-[10px] flex h-[330px] flex-col lg:mt-[1px] lg:h-[320px] lg:w-[1000px]"
+            className="mx-auto mt-[10px] flex h-[330px] flex-col lg:mt-px lg:h-[320px] lg:w-[1000px]"
           >
             <div className="mx-auto flex flex-col gap-[4px]">
               <div className="mx-auto flex flex-col p-2 lg:p-4">
                 <input
-                  className="mx-auto h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[13px] outline-none lg:h-[40px] lg:w-[580px] lg:rounded-[4px] lg:border-1 lg:text-[15px] dark:border-white/50"
+                  className="mx-auto h-[40px] w-[320px] rounded-[4px] border border-black/50 p-2 text-[13px] outline-none lg:h-[40px] lg:w-[580px] lg:rounded-[4px] lg:text-[15px] dark:border-white/50"
                   type="text"
                   placeholder="Enter Room Id"
                   maxLength={6}
@@ -130,7 +130,7 @@ export default function Home() {
                   }
                 />
                 <input
-                  className="mx-auto mt-[8px] h-[40px] w-[320px] rounded-[4px] border-1 border-black/50 p-2 text-[13px] outline-none lg:mt-[10px] lg:h-[40px] lg:w-[580px] lg:rounded-[4px] lg:border-1 lg:text-[15px] dark:border-white/50"
+                  className="mx-auto mt-[8px] h-[40px] w-[320px] rounded-[4px] border border-black/50 p-2 text-[13px] outline-none lg:mt-[10px] lg:h-[40px] lg:w-[580px] lg:rounded-[4px] lg:text-[15px] dark:border-white/50"
                   type="text"
                   placeholder="Enter your name"
                   maxLength={20}
@@ -151,7 +151,7 @@ export default function Home() {
                 Don&apos;t have any Room to join? Create your own Private Room
               </span>
               <button
-                className="mx-auto h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-blue-400 text-[14px] font-medium text-white transition-all duration-300 hover:bg-blue-400/90 lg:mt-[1px] lg:h-[40px] lg:w-[580px] lg:rounded-[6px] lg:text-[15px]"
+                className="mx-auto h-[38px] w-[320px] cursor-pointer rounded-[4px] bg-blue-400 text-[14px] font-medium text-white transition-all duration-300 hover:bg-blue-400/90 lg:mt-px lg:h-[40px] lg:w-[580px] lg:rounded-[6px] lg:text-[15px]"
                 onClick={createId}
               >
                 {isPending ? (
@@ -167,7 +167,7 @@ export default function Home() {
                   <div className="mx-auto w-[240px] p-2 text-center text-[13px] lg:w-fit lg:text-[14px]">
                     Share this Room Id with your friends to chat privately:
                   </div>
-                  <span className="mt-[-12px] flex w-[120px] items-center justify-center text-[16px] font-semibold lg:mt-[0px] lg:ml-[-8px] lg:w-fit lg:text-[18px]">
+                  <span className="mt-[-12px] flex w-[120px] items-center justify-center text-[16px] font-semibold lg:mt-0 lg:ml-[-8px] lg:w-fit lg:text-[18px]">
                     <span className="w-fit px-[8px]">{roomId}</span>
                     {copied ? (
                       <CheckIcon className="h-[40px] w-[22px] text-black/80 transition-colors duration-300 hover:text-black dark:text-white/80 dark:hover:text-white" />
