@@ -17,7 +17,7 @@ const ChatroomContent: React.FC = () => {
   const searchParams = useSearchParams();
   const username = searchParams.get('username') ?? '';
   const roomId = searchParams.get('roomId') ?? '';
-  const [chatmessage, setChatMessage] = useState('');
+  const [chatMessage, setChatMessage] = useState('');
   const { message, addMessage } = useMessage();
   const [socketCount, setSocketCount] = useState<number>(0);
   const [copied, setCopied] = useState(false);
@@ -108,13 +108,13 @@ const ChatroomContent: React.FC = () => {
   const handleMessage = () => {
     const socket = getSocket();
     
-    if (chatmessage == '') {
+    if (chatMessage == '') {
       toast.error(`Empty message cannot be send`);
       return;
     }
 
     const time = currTime();
-    socket.emit('message', roomId, chatmessage, time, username);
+    socket.emit('message', roomId, chatMessage, time, username);
     setChatMessage('');
   };
 
@@ -182,7 +182,7 @@ const ChatroomContent: React.FC = () => {
             className="h-[40px] w-[260px] rounded-[6px] border-1 border-black/30 p-[8px] outline-none lg:mr-3 lg:h-[42px] lg:w-[570px] lg:p-[12px] lg:text-[16px] dark:border-white/20"
             type="text"
             placeholder="Message"
-            value={chatmessage}
+            value={chatMessage}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setChatMessage(e.target.value);
               handleTypingEmit();
